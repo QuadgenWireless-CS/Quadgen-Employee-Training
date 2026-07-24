@@ -526,36 +526,57 @@ function renderHomeModules(){
 
   container.innerHTML = staticCardsHtml + '<p id="dynamic-modules-loading" style="color:var(--muted);font-size:13.5px;grid-column:1/-1;">Checking for additional modules…</p>';
 
-  STATIC_MODULE_ORDER.forEach(function(id){
-    checkModuleStatusById(id, STATIC_MODULES[id].title);
-  });
+  // Two requests total per login (not one per module): the module list, and
+  // ALL of this employee's results in a single batched call.
+  var modulesPromise = jsonpRequest(RESULTS_WEBAPP_URL + '?action=list_modules');
+  var resultsPromise = jsonpRequest(RESULTS_WEBAPP_URL + '?action=check_all&empid=' + encodeURIComponent(user.empid));
 
-  jsonpRequest(RESULTS_WEBAPP_URL + '?action=list_modules')
-    .then(function(data){
-      allModules = data.modules || [];
-      var loadingEl = document.getElementById('dynamic-modules-loading');
-      if(loadingEl) loadingEl.remove();
+  Promise.all([modulesPromise, resultsPromise]).then(function(responses){
+    allModules = responses[0].modules || [];
+    var employeeRows = responses[1].rows || [];
 
-      var dynamicCardsHtml = allModules.map(function(m){
-        return '<div class="module-card" id="module-card-'+m.id+'">'+
-          '<div class="module-icon">'+m.icon+'</div>'+
-          '<h2>'+m.title+'</h2>'+
-          '<p>'+m.description+'</p>'+
-          '<div id="status-'+m.id+'" class="module-status not-done">Checking status…</div>'+
-          '<div class="module-meta"><span>Pass mark '+m.passPercentage+'%</span></div>'+
-          '<button class="btn btn-primary" id="btn-'+m.id+'" onclick="openModule(\''+m.id+'\')">Start module</button>'+
-        '</div>';
-      }).join('');
-      container.insertAdjacentHTML('beforeend', dynamicCardsHtml);
+    var loadingEl = document.getElementById('dynamic-modules-loading');
+    if(loadingEl) loadingEl.remove();
 
-      allModules.forEach(function(m){ checkModuleStatusById(m.id, m.title); });
-    })
-    .catch(function(err){
-      var loadingEl = document.getElementById('dynamic-modules-loading');
-      if(loadingEl) loadingEl.textContent = 'Could not load additional modules: ' + err;
+    var dynamicCardsHtml = allModules.map(function(m){
+      return '<div class="module-card" id="module-card-'+m.id+'">'+
+        '<div class="module-icon">'+m.icon+'</div>'+
+        '<h2>'+m.title+'</h2>'+
+        '<p>'+m.description+'</p>'+
+        '<div id="status-'+m.id+'" class="module-status not-done">Checking status…</div>'+
+        '<div class="module-meta"><span>Pass mark '+m.passPercentage+'%</span></div>'+
+        '<button class="btn btn-primary" id="btn-'+m.id+'" onclick="openModule(\''+m.id+'\')">Start module</button>'+
+      '</div>';
+    }).join('');
+    container.insertAdjacentHTML('beforeend', dynamicCardsHtml);
+
+    // Build a lookup by module title, then apply to every module (static + dynamic) at once
+    var byTitle = {};
+    employeeRows.forEach(function(r){ byTitle[r.module] = r; });
+
+    var allIdsAndTitles = STATIC_MODULE_ORDER.map(function(id){ return {id:id, title:STATIC_MODULES[id].title}; })
+      .concat(allModules.map(function(m){ return {id:m.id, title:m.title}; }));
+
+    allIdsAndTitles.forEach(function(entry){
+      var r = byTitle[entry.title];
+      if(r){
+        results[entry.id] = {
+          done:true, score:Number(r.score), total:Number(r.total),
+          pass: String(r.result).toLowerCase() === 'pass'
+        };
+      } else {
+        results[entry.id] = { done:false, score:0, total:0, pass:false };
+      }
+      updateModuleCardStatus(entry.id);
     });
+  }).catch(function(err){
+    var loadingEl = document.getElementById('dynamic-modules-loading');
+    if(loadingEl) loadingEl.textContent = 'Could not load training modules: ' + err;
+  });
 }
 
+/* Kept for other call sites (e.g. re-checking a single module after a change);
+   the home page itself now uses the single batched check_all call above. */
 function checkModuleStatusById(moduleId, moduleTitle){
   var url = RESULTS_WEBAPP_URL + '?action=check&empid=' + encodeURIComponent(user.empid) + '&module=' + encodeURIComponent(moduleTitle);
   jsonpRequest(url)
