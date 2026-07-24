@@ -188,6 +188,10 @@
   .topic-visual{
     margin:16px 0;border-radius:12px;overflow:hidden;border:1px solid var(--border);
   }
+  .video-embed-wrap{
+    position:relative;width:100%;padding-bottom:56.25%;height:0;margin:16px 0;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#000;
+  }
+  .video-embed-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;}
   .topic-nav{display:flex;justify-content:space-between;align-items:center;margin-top:26px;}
   .topic-nav .btn-ghost:disabled{opacity:.4;cursor:not-allowed;}
 
