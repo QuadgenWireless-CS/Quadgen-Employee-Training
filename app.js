@@ -8,6 +8,46 @@ var currentTopicIndex = 0;
 var quizAnswers = {};
 
 /* ============================= SEED CONTENT: COMPLIANCE (used only by "Seed Default Content") ============================= */
+/* Builds a consistent, richly-animated 3-phase story illustration (Setup -> Risk flagged -> Resolution)
+   for any topic, so every topic gets the same animation quality with topic-relevant icons/text. */
+function buildStoryIllustration(o){
+  return "<svg viewBox='0 0 700 300' xmlns='http://www.w3.org/2000/svg'>"+
+    "<style>"+
+      "@keyframes qgArrow{0%{stroke-dashoffset:170;opacity:0;}8%{opacity:1;}35%{stroke-dashoffset:0;opacity:1;}46%{opacity:0;}100%{opacity:0;stroke-dashoffset:0;}}"+
+      "@keyframes qgReject{0%,32%{opacity:0;transform:scale(.4);}38%{opacity:1;transform:scale(1.18);}43%{transform:scale(1);}58%{opacity:1;transform:scale(1);}64%,100%{opacity:0;transform:scale(.8);}}"+
+      "@keyframes qgReport{0%,64%{opacity:0;transform:translateY(12px);}70%{opacity:1;transform:translateY(0);}90%{opacity:1;}98%,100%{opacity:0;}}"+
+      "@keyframes qgBounce{0%,64%,100%{transform:translateY(0);}68%{transform:translateY(-6px);}72%{transform:translateY(0);}}"+
+      ".qg-arrow{stroke-dasharray:170;animation:qgArrow 8s ease-in-out infinite;}"+
+      ".qg-reject{transform-origin:400px 150px;animation:qgReject 8s ease-in-out infinite;}"+
+      ".qg-report{animation:qgReport 8s ease-in-out infinite;}"+
+      ".qg-gift{transform-origin:350px 240px;animation:qgBounce 8s ease-in-out infinite;}"+
+    "</style>"+
+    "<rect width='700' height='300' fill='var(--blue-light)'/>"+
+    "<text x='350' y='34' font-size='16' text-anchor='middle' fill='var(--navy)' font-weight='700'>"+o.caption+"</text>"+
+    "<circle cx='190' cy='150' r='46' fill='var(--navy)'/>"+
+    "<rect x='140' y='196' width='100' height='90' rx='16' fill='var(--navy)'/>"+
+    "<text x='190' y='163' font-size='38' text-anchor='middle'>"+o.leftEmoji+"</text>"+
+    "<text x='190' y='300' font-size='13' text-anchor='middle' fill='var(--navy)' font-weight='700'>"+o.leftLabel+"</text>"+
+    "<circle cx='510' cy='150' r='46' fill='var(--blue)'/>"+
+    "<rect x='460' y='196' width='100' height='90' rx='16' fill='var(--blue)'/>"+
+    "<text x='510' y='163' font-size='38' text-anchor='middle'>"+o.rightEmoji+"</text>"+
+    "<text x='510' y='300' font-size='13' text-anchor='middle' fill='var(--navy)' font-weight='700'>"+o.rightLabel+"</text>"+
+    "<g class='qg-gift'><circle cx='350' cy='150' r='34' fill='#fff' stroke='var(--navy)' stroke-width='3'/>"+
+      "<text x='350' y='164' font-size='34' text-anchor='middle'>"+o.centerEmoji+"</text></g>"+
+    "<line x1='236' y1='150' x2='398' y2='150' stroke='var(--navy)' stroke-width='4' stroke-linecap='round' class='qg-arrow'/>"+
+    "<polygon points='398,140 418,150 398,160' fill='var(--navy)' class='qg-arrow'/>"+
+    "<g class='qg-reject'>"+
+      "<circle cx='400' cy='150' r='30' fill='#fdeceb' stroke='var(--danger)' stroke-width='4'/>"+
+      "<text x='400' y='163' font-size='28' text-anchor='middle'>"+o.verdictEmoji+"</text>"+
+    "</g>"+
+    "<g class='qg-report'>"+
+      "<circle cx='350' cy='250' r='30' fill='var(--success-bg)' stroke='var(--success)' stroke-width='3'/>"+
+      "<text x='350' y='260' font-size='26' text-anchor='middle'>✓</text>"+
+      "<text x='350' y='292' font-size='13' text-anchor='middle' fill='var(--success)' font-weight='800'>"+o.resultText+"</text>"+
+    "</g>"+
+    "</svg>";
+}
+
 var seedComplianceTopics = [
   {
     icon:"⚖️",
@@ -72,7 +112,8 @@ var seedComplianceTopics = [
       "Every location has a designated Internal Committee (IC) to receive and investigate complaints confidentially.",
       "Retaliation against a complainant or witness is a separate, serious violation."
     ],
-    example:"A manager repeatedly comments on a team member's appearance despite being asked to stop. This is harassment regardless of the manager's seniority, and the employee has the right to file a confidential complaint with the IC without fear of career consequences."
+    example:"A manager repeatedly comments on a team member's appearance despite being asked to stop. This is harassment regardless of the manager's seniority, and the employee has the right to file a confidential complaint with the IC without fear of career consequences.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Unwelcome Comment → Stop It → Report to IC',leftEmoji:'😟',leftLabel:'Colleague',rightEmoji:'🧑\u200d💼',rightLabel:'Manager',centerEmoji:'💬',verdictEmoji:'🚫',resultText:'Reported to Internal Committee ✓'})
   },
   {
     icon:"🤝",
@@ -85,7 +126,8 @@ var seedComplianceTopics = [
       "Equal pay for equal work is a legal and ethical obligation, not a courtesy.",
       "Bias — even unconscious — should be actively checked in interviews and reviews."
     ],
-    example:"Two candidates apply for the same role with equal qualifications. Rejecting one because of assumptions about their age or family status, rather than documented job-related criteria, is unlawful discrimination."
+    example:"Two candidates apply for the same role with equal qualifications. Rejecting one because of assumptions about their age or family status, rather than documented job-related criteria, is unlawful discrimination.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Equal Candidates → Reject Bias → Decide on Merit',leftEmoji:'🧑',leftLabel:'Candidate A',rightEmoji:'🧑\u200d🦱',rightLabel:'Candidate B',centerEmoji:'📋',verdictEmoji:'🚫',resultText:'Merit-Based Decision ✓'})
   },
   {
     icon:"🌍",
@@ -98,7 +140,8 @@ var seedComplianceTopics = [
       "Mentorship and stretch opportunities should be offered broadly, not only within existing networks.",
       "Inclusive language and accessible meeting formats benefit the whole team, not just a few."
     ],
-    example:"During a brainstorm, one team member's idea is initially ignored, then praised minutes later when repeated by someone else. A good ally notices this pattern and redirects credit — small daily behaviors like this are what build (or erode) an inclusive culture."
+    example:"During a brainstorm, one team member's idea is initially ignored, then praised minutes later when repeated by someone else. A good ally notices this pattern and redirects credit — small daily behaviors like this are what build (or erode) an inclusive culture.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Idea Shared → Credit Redirected → Everyone Heard',leftEmoji:'🙋\u200d♀️',leftLabel:'Team Member',rightEmoji:'🙋',rightLabel:'Colleague',centerEmoji:'💡',verdictEmoji:'🔄',resultText:'Credit Given Correctly ✓'})
   },
   {
     icon:"🧭",
@@ -111,7 +154,8 @@ var seedComplianceTopics = [
       "Keep personal social media conduct free of content that could embarrass colleagues or the company.",
       "Alcohol at work events never excuses unprofessional or unsafe behavior."
     ],
-    example:"During a heated project review, a senior employee raises their voice and mocks a junior colleague's mistake in front of the whole team. Even if the technical criticism is valid, the delivery is a professional conduct violation and should be reported."
+    example:"During a heated project review, a senior employee raises their voice and mocks a junior colleague's mistake in front of the whole team. Even if the technical criticism is valid, the delivery is a professional conduct violation and should be reported.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Heated Words → Stop & Reset → Respectful Discussion',leftEmoji:'😠',leftLabel:'Senior Employee',rightEmoji:'😟',rightLabel:'Junior Colleague',centerEmoji:'🗯️',verdictEmoji:'🛑',resultText:'Professional Conduct Restored ✓'})
   },
   {
     icon:"📣",
@@ -124,7 +168,8 @@ var seedComplianceTopics = [
       "Retaliation against a whistleblower is grounds for disciplinary action, up to termination.",
       "All reports are handled confidentially and investigated by an independent team."
     ],
-    example:"An employee notices a colleague repeatedly falsifying expense reports and reports it anonymously through the Ethics Hotline. The company is obligated to investigate and to protect the reporting employee's identity throughout the process."
+    example:"An employee notices a colleague repeatedly falsifying expense reports and reports it anonymously through the Ethics Hotline. The company is obligated to investigate and to protect the reporting employee's identity throughout the process.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Spot Fraud → Report Anonymously → Protected by Policy',leftEmoji:'🧑\u200d💼',leftLabel:'Employee',rightEmoji:'🕵️',rightLabel:'Ethics Team',centerEmoji:'🧾',verdictEmoji:'🚩',resultText:'Protected & Investigated ✓'})
   },
   {
     icon:"🔒",
@@ -137,7 +182,8 @@ var seedComplianceTopics = [
       "Use only company-approved tools to store or transmit sensitive data — not personal email or consumer cloud drives.",
       "Report any suspected data leak or lost device immediately, however small it seems."
     ],
-    example:"An employee discusses an unreleased product feature with a friend at a coffee shop, unaware a competitor's contact is seated nearby. Even casual disclosure of confidential plans can cause real commercial harm."
+    example:"An employee discusses an unreleased product feature with a friend at a coffee shop, unaware a competitor's contact is seated nearby. Even casual disclosure of confidential plans can cause real commercial harm.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Public Conversation → Risk Spotted → Stay Confidential',leftEmoji:'🧑\u200d💼',leftLabel:'Employee',rightEmoji:'🕵️\u200d♂️',rightLabel:'Nearby Listener',centerEmoji:'💬',verdictEmoji:'🚫',resultText:'Confidentiality Maintained ✓'})
   },
   {
     icon:"🧩",
@@ -150,7 +196,8 @@ var seedComplianceTopics = [
       "Outside employment or consulting must be disclosed and approved in advance if it overlaps with company business.",
       "When in doubt, disclose — an undisclosed conflict is far more damaging than a disclosed one."
     ],
-    example:"A procurement manager's spouse owns a company bidding for a QuadGen vendor contract. The manager must disclose this relationship and step back from the vendor selection process entirely."
+    example:"A procurement manager's spouse owns a company bidding for a QuadGen vendor contract. The manager must disclose this relationship and step back from the vendor selection process entirely.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Family Connection → Disclose It → Recuse & Stay Ethical',leftEmoji:'🧑\u200d🤝\u200d🧑',leftLabel:'Family Member',rightEmoji:'🏢',rightLabel:'Vendor',centerEmoji:'📝',verdictEmoji:'🚩',resultText:'Disclosed & Recused ✓'})
   }
 ];
 
@@ -185,7 +232,8 @@ var seedCyberTopics = [
       "Be suspicious of urgency: 'your account will be suspended in 24 hours' is a classic pressure tactic.",
       "Never enter your company password on a page reached by clicking an email link — go to the site directly instead."
     ],
-    example:"You receive an email that looks like it's from 'IT Support' asking you to 'verify your password' via a link because of a 'security update'. The sender's real address is it-support@quadgen-secure-check.net — a lookalike domain, not the real company domain. This is phishing."
+    example:"You receive an email that looks like it's from 'IT Support' asking you to 'verify your password' via a link because of a 'security update'. The sender's real address is it-support@quadgen-secure-check.net — a lookalike domain, not the real company domain. This is phishing.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Suspicious Email → Spot Red Flags → Verify & Report',leftEmoji:'📧',leftLabel:'Fake Sender',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔗',verdictEmoji:'🚩',resultText:'Verified & Reported ✓'})
   },
   {
     icon:"📱",
@@ -198,7 +246,8 @@ var seedCyberTopics = [
       "Never reply with personal information, OTPs or codes to an unsolicited text.",
       "Verify by contacting the organization directly through its official app or number, not the one in the text."
     ],
-    example:"A text reads: 'Your package could not be delivered. Update your address here: bit.ly/xyz123'. You weren't expecting a delivery. This is a classic smishing attempt designed to harvest personal or payment details."
+    example:"A text reads: 'Your package could not be delivered. Update your address here: bit.ly/xyz123'. You weren't expecting a delivery. This is a classic smishing attempt designed to harvest personal or payment details.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Unexpected Text → Suspicious Link → Block & Report',leftEmoji:'📱',leftLabel:'Unknown Sender',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔗',verdictEmoji:'🚩',resultText:'Blocked & Reported ✓'})
   },
   {
     icon:"📞",
@@ -211,7 +260,8 @@ var seedCyberTopics = [
       "If pressured to act immediately, hang up and call back using an official number you look up independently.",
       "Be cautious of unexpected calls claiming to be a senior leader requesting an urgent fund transfer — verify through a second channel."
     ],
-    example:"You get a call from someone claiming to be from 'QuadGen IT', saying your account was compromised and asking you to read out the OTP just sent to your phone 'to verify your identity'. This is vishing — hang up and report it."
+    example:"You get a call from someone claiming to be from 'QuadGen IT', saying your account was compromised and asking you to read out the OTP just sent to your phone 'to verify your identity'. This is vishing — hang up and report it.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Urgent Call → Request for OTP → Hang Up & Verify',leftEmoji:'📞',leftLabel:'Spoofed Caller',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔢',verdictEmoji:'🚩',resultText:'Call Ended & Verified ✓'})
   },
   {
     icon:"🔳",
@@ -224,7 +274,8 @@ var seedCyberTopics = [
       "Avoid scanning QR codes asking for login credentials or payment information directly.",
       "When in doubt, navigate to the organization's site manually instead of scanning."
     ],
-    example:"An email claiming to be from HR asks you to 'scan this QR code to complete your annual benefits enrollment.' Scanning it redirects to a fake login page designed to steal your company credentials."
+    example:"An email claiming to be from HR asks you to 'scan this QR code to complete your annual benefits enrollment.' Scanning it redirects to a fake login page designed to steal your company credentials.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Scan QR Code → Preview the Link → Confirm Before Proceeding',leftEmoji:'🔳',leftLabel:'QR Poster',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔗',verdictEmoji:'🚩',resultText:'Checked Before Proceeding ✓'})
   },
   {
     icon:"💼",
@@ -237,7 +288,8 @@ var seedCyberTopics = [
       "Check the reply-to address, not just the display name — attackers often use a lookalike domain.",
       "Establish and follow a dual-approval process for any wire transfer or payment detail change."
     ],
-    example:"Finance receives an email appearing to be from the CFO: 'I'm in a meeting, please wire $48,000 to this new vendor account today, keep this confidential.' This is a textbook BEC attempt — verify by calling the CFO directly before acting."
+    example:"Finance receives an email appearing to be from the CFO: 'I'm in a meeting, please wire $48,000 to this new vendor account today, keep this confidential.' This is a textbook BEC attempt — verify by calling the CFO directly before acting.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Urgent Wire Request → Suspicious Pressure → Verify Independently',leftEmoji:'👔',leftLabel:'\u201cCFO\u201d Email',rightEmoji:'🧑\u200d💼',rightLabel:'Finance Team',centerEmoji:'💸',verdictEmoji:'🚩',resultText:'Verified by Phone Call ✓'})
   },
   {
     icon:"🎭",
@@ -250,7 +302,8 @@ var seedCyberTopics = [
       "Tailgating: following an employee through a secure door without badging in.",
       "Pretexting: building a false but plausible backstory to earn your trust over time."
     ],
-    example:"Someone in a delivery uniform, carrying boxes, asks an employee to 'hold the door' into a secure office area. Even though it seems polite to help, this is a common tailgating technique — every visitor should badge in independently."
+    example:"Someone in a delivery uniform, carrying boxes, asks an employee to 'hold the door' into a secure office area. Even though it seems polite to help, this is a common tailgating technique — every visitor should badge in independently.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Friendly Request → Tailgating Attempt → Badge In Yourself',leftEmoji:'📦',leftLabel:'Delivery Person',rightEmoji:'🧑\u200d💼',rightLabel:'Employee',centerEmoji:'🚪',verdictEmoji:'🚫',resultText:'Badged In Independently ✓'})
   },
   {
     icon:"🔑",
@@ -263,7 +316,8 @@ var seedCyberTopics = [
       "Enable passkeys wherever QuadGen systems support them for stronger, phishing-resistant login.",
       "Never share your password with anyone, including IT — legitimate support never needs it."
     ],
-    example:"An employee uses the same password for their personal email and their work account. If that personal account is ever breached, attackers can immediately try the same password against company systems — this is called credential stuffing."
+    example:"An employee uses the same password for their personal email and their work account. If that personal account is ever breached, attackers can immediately try the same password against company systems — this is called credential stuffing.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Reused Password → Breach Risk → Switch to Passkey',leftEmoji:'🔑',leftLabel:'Old Password',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔓',verdictEmoji:'🚩',resultText:'Passkey Enabled ✓'})
   },
   {
     icon:"🔔",
@@ -276,7 +330,8 @@ var seedCyberTopics = [
       "Where available, use number-matching MFA (entering a code shown on the login screen) instead of a simple approve/deny tap.",
       "Report repeated unexpected MFA prompts to IT Security even if you denied every one of them."
     ],
-    example:"At 11pm, an employee's phone buzzes ten times in a row with 'Approve sign-in?' prompts they never requested. Tapping 'Approve' out of frustration would hand an attacker full access — the correct action is to deny all and report it immediately."
+    example:"At 11pm, an employee's phone buzzes ten times in a row with 'Approve sign-in?' prompts they never requested. Tapping 'Approve' out of frustration would hand an attacker full access — the correct action is to deny all and report it immediately.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Repeated Prompts → Deny the Request → Report to IT Security',leftEmoji:'📲',leftLabel:'Attacker',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔔',verdictEmoji:'🚫',resultText:'Denied & Reported ✓'})
   },
   {
     icon:"🗂️",
@@ -289,7 +344,8 @@ var seedCyberTopics = [
       "Lock your screen every time you step away, even for a minute, in shared or public spaces.",
       "Dispose of physical documents containing sensitive data via secure shredding, not the regular trash."
     ],
-    example:"An employee copies a customer database to a personal USB drive to 'work on it over the weekend.' Even with good intentions, this violates data handling policy and creates a serious, unencrypted point of exposure if the drive is lost."
+    example:"An employee copies a customer database to a personal USB drive to 'work on it over the weekend.' Even with good intentions, this violates data handling policy and creates a serious, unencrypted point of exposure if the drive is lost.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Unknown USB → Risk Recognized → Hand to IT Security',leftEmoji:'💾',leftLabel:'USB Drive',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔌',verdictEmoji:'🚩',resultText:'Handed to IT Securely ✓'})
   },
   {
     icon:"🧯",
@@ -302,7 +358,8 @@ var seedCyberTopics = [
       "Keep systems patched and updated promptly — many ransomware strains exploit known, unpatched vulnerabilities.",
       "Follow the 3-2-1 backup principle: three copies of data, on two different media, with one copy stored offline or offsite."
     ],
-    example:"An employee opens an unexpected invoice attachment and enables 'editing' as prompted. Within minutes, shared drive files begin showing a .locked extension and a ransom note appears — this is active ransomware, and IT Security must be alerted immediately, without shutting the machine off first if instructed otherwise by IT."
+    example:"An employee opens an unexpected invoice attachment and enables 'editing' as prompted. Within minutes, shared drive files begin showing a .locked extension and a ransom note appears — this is active ransomware, and IT Security must be alerted immediately, without shutting the machine off first if instructed otherwise by IT.",
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Suspicious Attachment → Files Encrypted → Isolate & Restore',leftEmoji:'📎',leftLabel:'Attachment',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🦠',verdictEmoji:'🚩',resultText:'Isolated & Restored ✓'})
   }
 ];
 
