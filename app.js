@@ -816,7 +816,6 @@ function renderResult(score, total, pass){
     '<div class="result-wrap">'+
       '<div class="certificate" id="certificate-print">'+
         '<img class="cert-logo" src="logo.png" alt="QuadGen Wireless Solutions logo">'+
-        '<p class="cert-org">Quad<span>Gen</span> Wireless Solutions</p>'+
         '<p class="cert-kicker">Employee Awareness Training Portal</p>'+
         '<p class="cert-heading">Certificate of Completion</p>'+
         '<p class="cert-sub">This certifies that</p>'+
