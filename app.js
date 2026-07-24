@@ -20,7 +20,23 @@ var seedComplianceTopics = [
       "Comply with all applicable laws, regulations and company policies in every country we operate in.",
       "Report suspected violations promptly — silence enables misconduct."
     ],
-    example:"An employee is offered a expensive gift by a vendor shortly before a contract renewal. Accepting it — even 'just this once' — creates a real or perceived conflict and must be politely declined and reported to the Ethics desk."
+    example:"An employee is offered a expensive gift by a vendor shortly before a contract renewal. Accepting it — even 'just this once' — creates a real or perceived conflict and must be politely declined and reported to the Ethics desk.",
+    illustration:"<svg viewBox='0 0 700 300' xmlns='http://www.w3.org/2000/svg'>"+
+      "<rect width='700' height='300' fill='var(--blue-light)'/>"+
+      "<circle cx='190' cy='140' r='46' fill='var(--navy)'/>"+
+      "<rect x='140' y='186' width='100' height='90' rx='16' fill='var(--navy)'/>"+
+      "<text x='190' y='150' font-size='38' text-anchor='middle'>🧑\u200d💼</text>"+
+      "<circle cx='510' cy='140' r='46' fill='var(--blue)'/>"+
+      "<rect x='460' y='186' width='100' height='90' rx='16' fill='var(--blue)'/>"+
+      "<text x='510' y='150' font-size='38' text-anchor='middle'>🤝</text>"+
+      "<rect x='310' y='170' width='80' height='70' rx='8' fill='#f6c453' stroke='var(--navy)' stroke-width='3'/>"+
+      "<rect x='310' y='196' width='80' height='14' fill='var(--navy)'/>"+
+      "<rect x='342' y='170' width='16' height='70' fill='var(--navy)'/>"+
+      "<circle cx='400' cy='150' r='30' fill='#fdeceb' stroke='var(--danger)' stroke-width='4'/>"+
+      "<line x1='388' y1='138' x2='412' y2='162' stroke='var(--danger)' stroke-width='4' stroke-linecap='round'/>"+
+      "<line x1='412' y1='138' x2='388' y2='162' stroke='var(--danger)' stroke-width='4' stroke-linecap='round'/>"+
+      "<text x='350' y='40' font-size='18' text-anchor='middle' fill='var(--navy)' font-weight='700'>Vendor offers a gift right before contract renewal — decline &amp; report</text>"+
+      "</svg>"
   },
   {
     icon:"🚫",
@@ -670,39 +686,88 @@ function getPassMark(){
   return Math.ceil(total * (currentModuleData.module.passPercentage / 100));
 }
 
-var currentSubSlideIndex = 0; // 0 = intro/body, 1 = key points, 2 = example
+var currentSubSlideIndex = 0; // 0 = overview, 1 = pictorial example, 2 = key points
 var currentNarrationText = '';
+var isNarrationPaused = false;
 
 function speechSupported(){
   return typeof window !== 'undefined' && 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
 }
 
+function pickIndianVoice(){
+  if(!speechSupported()) return null;
+  var voices = window.speechSynthesis.getVoices() || [];
+  // Prefer an explicit Indian English voice if the browser/OS provides one.
+  // Availability varies by device — this is a best-effort enhancement, not guaranteed.
+  var indianVoice = voices.filter(function(v){ return /en[-_]IN/i.test(v.lang); })[0];
+  return indianVoice || null;
+}
+
+// Many browsers (esp. Chrome) return an empty voice list on the very first call
+// and only populate it asynchronously — this just triggers that load early,
+// so a real voice (Indian English, if available) is more likely ready in time
+// for the very first narrated slide.
+if(speechSupported()){
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = function(){ window.speechSynthesis.getVoices(); };
+}
+
 function narrateCurrentSlide(text){
   currentNarrationText = text;
+  isNarrationPaused = false;
   var statusEl = document.getElementById('narration-status');
   var nextBtn = document.getElementById('slide-next-btn');
+  var pauseBtn = document.getElementById('pause-narration-btn');
 
   if(!speechSupported()){
     if(nextBtn) nextBtn.disabled = false;
+    if(pauseBtn) pauseBtn.disabled = true;
     if(statusEl) statusEl.textContent = '🔇 Voice narration isn\'t supported in this browser — you may continue.';
     return;
   }
 
   window.speechSynthesis.cancel();
   if(nextBtn) nextBtn.disabled = true;
+  if(pauseBtn){ pauseBtn.disabled = false; pauseBtn.textContent = '⏸ Pause'; }
   if(statusEl) statusEl.textContent = '🔊 Playing narration…';
 
   var utter = new SpeechSynthesisUtterance(text);
   utter.rate = 0.98;
+  var indianVoice = pickIndianVoice();
+  if(indianVoice){
+    utter.voice = indianVoice;
+    utter.lang = indianVoice.lang;
+  } else {
+    utter.lang = 'en-IN'; // hint the engine toward an Indian-English pronunciation even without a dedicated voice
+  }
   utter.onend = function(){
     if(nextBtn) nextBtn.disabled = false;
+    if(pauseBtn) pauseBtn.disabled = true;
     if(statusEl) statusEl.textContent = '✓ Narration complete — you can continue.';
   };
   utter.onerror = function(){
     if(nextBtn) nextBtn.disabled = false;
+    if(pauseBtn) pauseBtn.disabled = true;
     if(statusEl) statusEl.textContent = '⚠️ Narration could not play — you may continue.';
   };
   window.speechSynthesis.speak(utter);
+}
+
+function togglePauseNarration(){
+  if(!speechSupported()) return;
+  var pauseBtn = document.getElementById('pause-narration-btn');
+  var statusEl = document.getElementById('narration-status');
+  if(isNarrationPaused){
+    window.speechSynthesis.resume();
+    isNarrationPaused = false;
+    if(pauseBtn) pauseBtn.textContent = '⏸ Pause';
+    if(statusEl) statusEl.textContent = '🔊 Playing narration…';
+  } else {
+    window.speechSynthesis.pause();
+    isNarrationPaused = true;
+    if(pauseBtn) pauseBtn.textContent = '▶ Resume';
+    if(statusEl) statusEl.textContent = '⏸ Paused.';
+  }
 }
 
 function replayNarration(){
@@ -729,7 +794,7 @@ function renderTopic(){
   var isLastTopic = currentTopicIndex === topics.length - 1;
   var isLastSlide = currentSubSlideIndex === 2;
 
-  var slideLabel = ['Part 1 of 3 — Overview', 'Part 2 of 3 — Key Points', 'Part 3 of 3 — Example'][currentSubSlideIndex];
+  var slideLabel = ['Part 1 of 3 — Overview', 'Part 2 of 3 — Pictorial Example', 'Part 3 of 3 — Key Points'][currentSubSlideIndex];
   var bodyHtml, narrationText;
 
   if(currentSubSlideIndex === 0){
@@ -740,17 +805,25 @@ function renderTopic(){
       '</h2>'+
       '<p>'+t.body+'</p>';
   } else if(currentSubSlideIndex === 1){
+    narrationText = 'Real world example. ' + t.example;
+    if(t.illustration){
+      bodyHtml =
+        '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Pictorial Example</h2>'+
+        '<div class="topic-visual">'+t.illustration+'</div>'+
+        '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
+    } else {
+      // Graceful fallback until an illustration has been added for this topic
+      bodyHtml =
+        '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Example</h2>'+
+        '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
+    }
+  } else {
     narrationText = 'Key points to remember. ' + keyPoints.join('. ');
     bodyHtml =
       '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Key Points</h2>'+
       '<div class="key-points"><div class="kp-title">Key points to remember</div><ul>'+
         keyPoints.map(function(p){ return '<li>'+p+'</li>'; }).join('')+
       '</ul></div>';
-  } else {
-    narrationText = 'Real world example. ' + t.example;
-    bodyHtml =
-      '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Real-World Example</h2>'+
-      '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
   }
 
   var isVeryFirstSlide = currentTopicIndex === 0 && currentSubSlideIndex === 0;
@@ -764,8 +837,9 @@ function renderTopic(){
     '<div class="topic-card">'+
       bodyHtml+
     '</div>'+
-    '<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin:14px 0;">'+
+    '<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin:14px 0;flex-wrap:wrap;">'+
       '<span id="narration-status" style="font-size:13px;color:var(--muted);">🔊 Playing narration…</span>'+
+      '<button class="btn-mini" id="pause-narration-btn" onclick="togglePauseNarration()">⏸ Pause</button>'+
       '<button class="btn-mini" onclick="replayNarration()">↻ Replay narration</button>'+
     '</div>'+
     '<div class="topic-nav">'+
@@ -1484,7 +1558,7 @@ function showTopicForm(moduleId, topicId){
   if(topicId && currentEditingModuleData){
     existing = currentEditingModuleData.topics.filter(function(t){ return t.id === topicId; })[0];
   }
-  var t = existing || { icon:'📌', title:'', body:'', keyPoints:[], example:'', tip:'', order: (currentEditingModuleData ? currentEditingModuleData.topics.length+1 : 1) };
+  var t = existing || { icon:'📌', title:'', body:'', keyPoints:[], example:'', tip:'', illustration:'', order: (currentEditingModuleData ? currentEditingModuleData.topics.length+1 : 1) };
   var keyPointsText = (t.keyPoints || []).join('\n');
 
   slot.innerHTML =
@@ -1497,10 +1571,12 @@ function showTopicForm(moduleId, topicId){
       '</div>'+
       '<label>Body (main explanation shown to employees)</label>'+
       '<textarea id="tf-body" rows="4" placeholder="The main paragraph explaining this topic...">'+escapeHtml(t.body)+'</textarea>'+
-      '<label>Key points (one per line)</label>'+
-      '<textarea id="tf-keypoints" rows="4" placeholder="One key point per line...">'+escapeHtml(keyPointsText)+'</textarea>'+
+      '<label>Pictorial example (optional — paste SVG code to illustrate this topic visually; leave blank to just show the text example)</label>'+
+      '<textarea id="tf-illustration" rows="3" placeholder="<svg viewBox=\'0 0 700 300\' ...>...</svg>">'+escapeHtml(t.illustration || '')+'</textarea>'+
       '<label>Real-world example</label>'+
       '<textarea id="tf-example" rows="2" placeholder="A short example illustrating this topic...">'+escapeHtml(t.example)+'</textarea>'+
+      '<label>Key points (one per line)</label>'+
+      '<textarea id="tf-keypoints" rows="4" placeholder="One key point per line...">'+escapeHtml(keyPointsText)+'</textarea>'+
       '<label>Hover tip (short one-line summary shown on hover)</label>'+
       '<input id="tf-tip" type="text" value="'+escapeAttr(t.tip)+'" placeholder="Short one-line tip">'+
       '<div class="modal-error" id="topic-form-error"></div>'+
@@ -1518,6 +1594,7 @@ function saveTopicForm(moduleId, topicId){
   var title = document.getElementById('tf-title').value.trim();
   var order = Number(document.getElementById('tf-order').value) || 1;
   var body = document.getElementById('tf-body').value.trim();
+  var illustration = document.getElementById('tf-illustration').value.trim();
   var keyPoints = document.getElementById('tf-keypoints').value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
   var example = document.getElementById('tf-example').value.trim();
   var tip = document.getElementById('tf-tip').value.trim();
@@ -1530,8 +1607,8 @@ function saveTopicForm(moduleId, topicId){
   errEl.textContent = '';
 
   var payload = topicId
-    ? { action:'update_topic', id:topicId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip }
-    : { action:'create_topic', moduleId:moduleId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip };
+    ? { action:'update_topic', id:topicId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip, illustration:illustration }
+    : { action:'create_topic', moduleId:moduleId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip, illustration:illustration };
 
   postToBackend(payload).then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
 }
