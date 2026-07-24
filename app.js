@@ -1185,6 +1185,7 @@ function saveModifyRow(rowNum, sectionPrefix){
 
 /* ============================= ADMIN: MANAGE TRAINING MODULES ============================= */
 var currentEditingModuleId = null; // which module's content editor is currently open, if any
+var currentEditingModuleData = null; // cached {module, topics, questions} for the open editor, used to prefill edit forms
 
 function postToBackend(payload){
   return fetch(RESULTS_WEBAPP_URL, {
@@ -1312,6 +1313,9 @@ function openModuleContentEditor(moduleId){
 
 function renderModuleContentEditor(data){
   var editorEl = document.getElementById('module-content-editor');
+  editorEl.dataset.moduleId = data.module.id;
+  currentEditingModuleData = data; // cache so edit forms can prefill without re-fetching
+
   var module = data.module, topics = data.topics, questions = data.questions;
 
   var topicsHtml = topics.length === 0
@@ -1320,7 +1324,7 @@ function renderModuleContentEditor(data){
         return '<div style="border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;">'+
           '<div style="display:flex;justify-content:space-between;align-items:center;">'+
             '<div><b>'+t.icon+' '+t.title+'</b> <span style="color:var(--muted);font-size:12px;">(order '+t.order+')</span></div>'+
-            '<div><button class="btn-mini" onclick="editTopicPrompt(\''+t.id+'\')">Edit</button> '+
+            '<div><button class="btn-mini" onclick="showTopicForm(\''+module.id+'\',\''+t.id+'\')">Edit</button> '+
               '<button class="btn-mini" style="background:var(--danger-bg);color:var(--danger);border-color:var(--danger-bg);" onclick="deleteTopicConfirm(\''+t.id+'\')">Delete</button></div>'+
           '</div>'+
         '</div>';
@@ -1332,7 +1336,7 @@ function renderModuleContentEditor(data){
         return '<div style="border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;">'+
           '<div style="display:flex;justify-content:space-between;align-items:center;">'+
             '<div style="max-width:70%;">'+(q.order)+'. '+q.questionText+' <span style="color:var(--success);font-size:12px;">(correct: '+q.options[q.correctIndex]+')</span></div>'+
-            '<div><button class="btn-mini" onclick="editQuestionPrompt(\''+q.id+'\')">Edit</button> '+
+            '<div><button class="btn-mini" onclick="showQuestionForm(\''+module.id+'\',\''+q.id+'\')">Edit</button> '+
               '<button class="btn-mini" style="background:var(--danger-bg);color:var(--danger);border-color:var(--danger-bg);" onclick="deleteQuestionConfirm(\''+q.id+'\')">Delete</button></div>'+
           '</div>'+
         '</div>';
@@ -1343,15 +1347,18 @@ function renderModuleContentEditor(data){
       '<h3 style="color:var(--navy);">Editing content for: '+module.icon+' '+module.title+'</h3>'+
 
       '<div style="font-size:13px;font-weight:800;color:var(--navy);margin:16px 0 8px;text-transform:uppercase;">Topics ('+topics.length+')</div>'+
-      topicsHtml+
+      '<p style="font-size:12.5px;color:var(--muted);margin:-4px 0 10px;">This is the information employees read before reaching the quiz.</p>'+
+      '<div id="topics-list">'+topicsHtml+'</div>'+
+      '<div id="topic-form-slot"></div>'+
       '<div style="display:flex;gap:8px;margin-top:10px;">'+
-        '<button class="btn btn-outline" onclick="addTopicPrompt(\''+module.id+'\')">+ Add Topic</button>'+
+        '<button class="btn btn-outline" onclick="showTopicForm(\''+module.id+'\', null)">+ Add Topic</button>'+
       '</div>'+
 
       '<div style="font-size:13px;font-weight:800;color:var(--navy);margin:24px 0 8px;text-transform:uppercase;">Quiz Questions ('+questions.length+')</div>'+
-      questionsHtml+
+      '<div id="questions-list">'+questionsHtml+'</div>'+
+      '<div id="question-form-slot"></div>'+
       '<div style="display:flex;gap:8px;margin-top:10px;">'+
-        '<button class="btn btn-outline" onclick="addQuestionPrompt(\''+module.id+'\')">+ Add Question</button>'+
+        '<button class="btn btn-outline" onclick="showQuestionForm(\''+module.id+'\', null)">+ Add Question</button>'+
       '</div>'+
 
       '<div style="text-align:center;margin-top:20px;">'+
@@ -1360,50 +1367,64 @@ function renderModuleContentEditor(data){
     '</div>';
 }
 
-function addTopicPrompt(moduleId){
-  var icon = prompt('Topic icon (emoji):', '📌');
-  if(icon === null) return;
-  var title = prompt('Topic title:');
-  if(!title) return;
-  var body = prompt('Topic body (main explanation paragraph):');
-  if(!body) return;
-  var keyPointsRaw = prompt('Key points, separated by " || " (e.g. Point one || Point two || Point three):');
-  if(keyPointsRaw === null) return;
-  var example = prompt('Real-world example:') || '';
-  var tip = prompt('Hover tip (short one-line summary):') || '';
-  var order = prompt('Order (position number, e.g. 1, 2, 3):', '1');
+/* ---------------- Topic form (create + edit) ---------------- */
 
-  var keyPoints = keyPointsRaw.split('||').map(function(s){ return s.trim(); }).filter(Boolean);
+function showTopicForm(moduleId, topicId){
+  var slot = document.getElementById('topic-form-slot');
+  var existing = null;
+  if(topicId && currentEditingModuleData){
+    existing = currentEditingModuleData.topics.filter(function(t){ return t.id === topicId; })[0];
+  }
+  var t = existing || { icon:'📌', title:'', body:'', keyPoints:[], example:'', tip:'', order: (currentEditingModuleData ? currentEditingModuleData.topics.length+1 : 1) };
+  var keyPointsText = (t.keyPoints || []).join('\n');
 
-  postToBackend({
-    action:'create_topic', moduleId:moduleId, order:Number(order)||1,
-    icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip
-  }).then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
+  slot.innerHTML =
+    '<div class="cms-form">'+
+      '<h4>'+(topicId ? 'Edit Topic' : 'Add New Topic')+'</h4>'+
+      '<div class="cms-form-row">'+
+        '<div style="width:80px;"><label>Icon</label><input id="tf-icon" type="text" value="'+escapeAttr(t.icon)+'"></div>'+
+        '<div style="flex:1;"><label>Title</label><input id="tf-title" type="text" value="'+escapeAttr(t.title)+'" placeholder="Topic title"></div>'+
+        '<div style="width:80px;"><label>Order</label><input id="tf-order" type="number" min="1" value="'+t.order+'"></div>'+
+      '</div>'+
+      '<label>Body (main explanation shown to employees)</label>'+
+      '<textarea id="tf-body" rows="4" placeholder="The main paragraph explaining this topic...">'+escapeHtml(t.body)+'</textarea>'+
+      '<label>Key points (one per line)</label>'+
+      '<textarea id="tf-keypoints" rows="4" placeholder="One key point per line...">'+escapeHtml(keyPointsText)+'</textarea>'+
+      '<label>Real-world example</label>'+
+      '<textarea id="tf-example" rows="2" placeholder="A short example illustrating this topic...">'+escapeHtml(t.example)+'</textarea>'+
+      '<label>Hover tip (short one-line summary shown on hover)</label>'+
+      '<input id="tf-tip" type="text" value="'+escapeAttr(t.tip)+'" placeholder="Short one-line tip">'+
+      '<div class="modal-error" id="topic-form-error"></div>'+
+      '<div class="cms-form-actions">'+
+        '<button class="btn btn-primary" onclick="saveTopicForm(\''+moduleId+'\', '+(topicId ? "'"+topicId+"'" : 'null')+')">'+(topicId ? 'Save Changes' : 'Add Topic')+'</button>'+
+        '<button class="btn btn-ghost" onclick="document.getElementById(\'topic-form-slot\').innerHTML=\'\';">Cancel</button>'+
+      '</div>'+
+    '</div>';
+
+  slot.scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
-function editTopicPrompt(topicId){
-  var t = currentModuleData && currentModuleData.topics ? currentModuleData.topics.filter(function(x){return x.id===topicId;})[0] : null;
-  // Fall back: find from last-rendered editor data via a fresh fetch if not in currentModuleData
-  var moduleId = currentEditingModuleId;
-  jsonpRequest(RESULTS_WEBAPP_URL + '?action=get_module_content&moduleId=' + encodeURIComponent(moduleId))
-    .then(function(data){
-      var topic = data.topics.filter(function(x){ return x.id === topicId; })[0];
-      if(!topic) return;
-      var icon = prompt('Topic icon:', topic.icon); if(icon===null) return;
-      var title = prompt('Title:', topic.title); if(title===null) return;
-      var body = prompt('Body:', topic.body); if(body===null) return;
-      var keyPointsRaw = prompt('Key points, separated by " || ":', topic.keyPoints.join(' || ')); if(keyPointsRaw===null) return;
-      var example = prompt('Example:', topic.example); if(example===null) return;
-      var tip = prompt('Hover tip:', topic.tip); if(tip===null) return;
-      var order = prompt('Order:', topic.order); if(order===null) return;
+function saveTopicForm(moduleId, topicId){
+  var icon = document.getElementById('tf-icon').value.trim() || '📌';
+  var title = document.getElementById('tf-title').value.trim();
+  var order = Number(document.getElementById('tf-order').value) || 1;
+  var body = document.getElementById('tf-body').value.trim();
+  var keyPoints = document.getElementById('tf-keypoints').value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
+  var example = document.getElementById('tf-example').value.trim();
+  var tip = document.getElementById('tf-tip').value.trim();
+  var errEl = document.getElementById('topic-form-error');
 
-      var keyPoints = keyPointsRaw.split('||').map(function(s){ return s.trim(); }).filter(Boolean);
+  if(!title || !body){
+    errEl.textContent = 'Please fill in at least a title and body.';
+    return;
+  }
+  errEl.textContent = '';
 
-      postToBackend({
-        action:'update_topic', id:topicId, order:Number(order)||1,
-        icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip
-      }).then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
-    });
+  var payload = topicId
+    ? { action:'update_topic', id:topicId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip }
+    : { action:'create_topic', moduleId:moduleId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip };
+
+  postToBackend(payload).then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
 }
 
 function deleteTopicConfirm(topicId){
@@ -1413,41 +1434,66 @@ function deleteTopicConfirm(topicId){
     .then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
 }
 
-function addQuestionPrompt(moduleId){
-  var questionText = prompt('Question text:');
-  if(!questionText) return;
-  var opt1 = prompt('Option 1:'); if(opt1===null) return;
-  var opt2 = prompt('Option 2:'); if(opt2===null) return;
-  var opt3 = prompt('Option 3:'); if(opt3===null) return;
-  var opt4 = prompt('Option 4:'); if(opt4===null) return;
-  var correctIndex = prompt('Which option is correct? Enter 0, 1, 2 or 3:', '0');
-  var order = prompt('Order (position number):', '1');
+/* ---------------- Question form (create + edit) ---------------- */
 
-  postToBackend({
-    action:'create_question', moduleId:moduleId, order:Number(order)||1,
-    questionText:questionText, options:[opt1,opt2,opt3,opt4], correctIndex:Number(correctIndex)||0
-  }).then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
+function showQuestionForm(moduleId, questionId){
+  var slot = document.getElementById('question-form-slot');
+  var existing = null;
+  if(questionId && currentEditingModuleData){
+    existing = currentEditingModuleData.questions.filter(function(q){ return q.id === questionId; })[0];
+  }
+  var q = existing || { questionText:'', options:['','','',''], correctIndex:0, order: (currentEditingModuleData ? currentEditingModuleData.questions.length+1 : 1) };
+
+  var optionRows = [0,1,2,3].map(function(i){
+    return '<div class="cms-form-row" style="align-items:center;">'+
+      '<input type="radio" name="qf-correct" value="'+i+'" '+(q.correctIndex===i ? 'checked' : '')+' style="width:auto;">'+
+      '<input id="qf-opt'+i+'" type="text" value="'+escapeAttr(q.options[i])+'" placeholder="Option '+(i+1)+'" style="flex:1;">'+
+    '</div>';
+  }).join('');
+
+  slot.innerHTML =
+    '<div class="cms-form">'+
+      '<h4>'+(questionId ? 'Edit Question' : 'Add New Question')+'</h4>'+
+      '<div class="cms-form-row">'+
+        '<div style="flex:1;"><label>Order</label><input id="qf-order" type="number" min="1" value="'+q.order+'" style="width:100px;"></div>'+
+      '</div>'+
+      '<label>Question text</label>'+
+      '<textarea id="qf-text" rows="2" placeholder="Type the question here...">'+escapeHtml(q.questionText)+'</textarea>'+
+      '<label>Options (select the radio button next to the correct one)</label>'+
+      optionRows+
+      '<div class="modal-error" id="question-form-error"></div>'+
+      '<div class="cms-form-actions">'+
+        '<button class="btn btn-primary" onclick="saveQuestionForm(\''+moduleId+'\', '+(questionId ? "'"+questionId+"'" : 'null')+')">'+(questionId ? 'Save Changes' : 'Add Question')+'</button>'+
+        '<button class="btn btn-ghost" onclick="document.getElementById(\'question-form-slot\').innerHTML=\'\';">Cancel</button>'+
+      '</div>'+
+    '</div>';
+
+  slot.scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
-function editQuestionPrompt(questionId){
-  var moduleId = currentEditingModuleId;
-  jsonpRequest(RESULTS_WEBAPP_URL + '?action=get_module_content&moduleId=' + encodeURIComponent(moduleId))
-    .then(function(data){
-      var q = data.questions.filter(function(x){ return x.id === questionId; })[0];
-      if(!q) return;
-      var questionText = prompt('Question text:', q.questionText); if(questionText===null) return;
-      var opt1 = prompt('Option 1:', q.options[0]); if(opt1===null) return;
-      var opt2 = prompt('Option 2:', q.options[1]); if(opt2===null) return;
-      var opt3 = prompt('Option 3:', q.options[2]); if(opt3===null) return;
-      var opt4 = prompt('Option 4:', q.options[3]); if(opt4===null) return;
-      var correctIndex = prompt('Correct option (0-3):', q.correctIndex); if(correctIndex===null) return;
-      var order = prompt('Order:', q.order); if(order===null) return;
+function saveQuestionForm(moduleId, questionId){
+  var questionText = document.getElementById('qf-text').value.trim();
+  var order = Number(document.getElementById('qf-order').value) || 1;
+  var options = [0,1,2,3].map(function(i){ return document.getElementById('qf-opt'+i).value.trim(); });
+  var correctRadio = document.querySelector('input[name="qf-correct"]:checked');
+  var errEl = document.getElementById('question-form-error');
 
-      postToBackend({
-        action:'update_question', id:questionId, order:Number(order)||1,
-        questionText:questionText, options:[opt1,opt2,opt3,opt4], correctIndex:Number(correctIndex)||0
-      }).then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
-    });
+  if(!questionText || options.some(function(o){ return !o; })){
+    errEl.textContent = 'Please fill in the question text and all 4 options.';
+    return;
+  }
+  if(!correctRadio){
+    errEl.textContent = 'Please select which option is correct.';
+    return;
+  }
+  errEl.textContent = '';
+  var correctIndex = Number(correctRadio.value);
+
+  var payload = questionId
+    ? { action:'update_question', id:questionId, order:order, questionText:questionText, options:options, correctIndex:correctIndex }
+    : { action:'create_question', moduleId:moduleId, order:order, questionText:questionText, options:options, correctIndex:correctIndex };
+
+  postToBackend(payload).then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
 }
 
 function deleteQuestionConfirm(questionId){
@@ -1455,6 +1501,13 @@ function deleteQuestionConfirm(questionId){
   var moduleId = currentEditingModuleId;
   postToBackend({ action:'delete_question', questionId:questionId })
     .then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
+}
+
+function escapeHtml(str){
+  return String(str == null ? '' : str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escapeAttr(str){
+  return escapeHtml(str).replace(/"/g,'&quot;');
 }
 
 /* Note: the original 2 modules no longer need seeding — they're always
