@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuadGen Wireless Solutions | Awareness Training Portal</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===================== WELCOME / ROLE SELECT SCREEN ===================== -->
+<div id="screen-welcome">
+  <div class="login-card">
+    <div class="logo-wrap"><img src="logo.png" alt="QuadGen Wireless Solutions logo"></div>
+    <p class="portal-title">Employee Awareness Training Portal<br>Please choose how you'd like to sign in.</p>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:14px;" onclick="startLogin('employee')">👤 Login as Employee</button>
+    <button class="btn btn-outline" style="width:100%;" onclick="startLogin('admin')">🔐 Login as Admin</button>
+  </div>
+</div>
+
+<!-- ===================== LOGIN SCREEN (shared, mode-aware) ===================== -->
+<div id="screen-login" class="hidden">
+  <div class="login-card">
+    <div class="logo-wrap"><img src="logo.png" alt="QuadGen Wireless Solutions logo"></div>
+    <p class="portal-title" id="login-mode-title">Employee Awareness Training Portal<br>Please sign in to begin your mandatory certification.</p>
+
+    <div id="login-step-1">
+      <div class="field">
+        <label for="in-name">Full name</label>
+        <input id="in-name" type="text" placeholder="e.g. Priya Sharma" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="in-empid-prefix">Employee ID</label>
+        <div class="compound-field">
+          <select id="in-empid-prefix" onchange="onPrefixChange()"></select>
+          <input id="in-empid-digits" type="text" placeholder="000" inputmode="numeric" autocomplete="off" oninput="formatEmpidDigitsInput(this)">
+        </div>
+      </div>
+      <div class="field">
+        <label for="in-email">Official email address</label>
+        <div class="compound-field">
+          <input id="in-email" type="text" placeholder="name" autocomplete="off" oninput="this.value=this.value.replace(/[^a-zA-Z0-9._-]/g,'');">
+          <span class="compound-fixed compound-fixed-suffix">@quadgenwireless.com</span>
+        </div>
+      </div>
+      <div class="login-error" id="login-error"></div>
+      <button class="btn btn-primary" style="width:100%;" onclick="signIn()" id="btn-sign-in">Sign in</button>
+      <p class="login-note" style="text-align:center;margin-top:14px;"><a href="#" onclick="showScreen('welcome');return false;" style="color:var(--muted);">&larr; Back</a></p>
+    </div>
+
+    <p class="login-note">By signing in you confirm the details above are accurate. Your name, employee ID and score will appear on your completion certificate.</p>
+  </div>
+</div>
+
+<!-- ===================== HOME SCREEN ===================== -->
+<div id="screen-home" class="hidden">
+  <div class="app-header">
+    <div class="left">
+      <span class="logo-badge"><img src="logo.png" alt="logo"></span>
+      <span class="brand-mini">Quad<span>Gen</span> Training Portal</span>
+    </div>
+    <div class="right">
+      <div class="header-user">Signed in as <b id="hdr-name">-</b><br><span id="hdr-empid">-</span></div>
+      <button class="logout-btn" onclick="handleLogout()">Log out</button>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="greeting-card">
+      <h1>Welcome, <span id="greet-name">Employee</span> 👋</h1>
+      <p>Awareness training is one of the strongest defenses an organization has. Most workplace policy violations and cybersecurity breaches begin with a single, avoidable human decision — a message opened, a link clicked, a comment left unchallenged. This program is designed to help you recognize risk before it becomes an incident, understand your responsibilities under company policy, and build habits that protect you, your colleagues, and QuadGen Wireless Solutions. Completion of both modules below is mandatory for every employee and results in an individual, verifiable certificate.</p>
+    </div>
+    <p class="section-label">Choose a training module</p>
+    <div class="module-grid" id="module-cards-container">
+      <p style="color:var(--muted);font-size:13.5px;">Loading training modules…</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ADMIN DASHBOARD SCREEN ===================== -->
+<div id="screen-admin" class="hidden">
+  <div class="app-header">
+    <div class="left">
+      <span class="logo-badge"><img src="logo.png" alt="logo"></span>
+      <span class="brand-mini">Quad<span>Gen</span> Admin Dashboard</span>
+    </div>
+    <div class="right">
+      <button class="logout-btn" onclick="handleLogout()">Log out</button>
+    </div>
+  </div>
+  <div class="wrap" id="admin-wrap" style="max-width:1200px;margin:0 auto;padding:36px 24px 80px;"></div>
+</div>
+
+<!-- ===================== MODULE SCREEN (topics + quiz + result share layout) ===================== -->
+<div id="screen-module" class="hidden">
+  <div class="app-header">
+    <div class="left">
+      <span class="logo-badge"><img src="logo.png" alt="logo"></span>
+      <span class="brand-mini">Quad<span>Gen</span> Training Portal</span>
+    </div>
+    <div class="right">
+      <div class="header-user">Signed in as <b id="hdr-name2">-</b><br><span id="hdr-empid2">-</span></div>
+      <button class="logout-btn" onclick="handleLogout()">Log out</button>
+    </div>
+  </div>
+  <div class="wrap" id="module-wrap"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
