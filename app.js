@@ -490,18 +490,53 @@ function showScreen(name){
 }
 
 /* ============================= HOME PAGE (dynamic modules) ============================= */
+/* Built-in modules — always available, no backend/database dependency at all.
+   These use the original hardcoded content, so they can never be affected by
+   any Sheet/Apps Script issues. */
+var STATIC_MODULES = {
+  compliance: {
+    id: 'compliance', icon:'📋', title: 'Compliance & Workplace Conduct Awareness',
+    description:'Code of conduct, anti-harassment, anti-discrimination, DEI, workplace respect, whistleblower protections, data confidentiality and conflict of interest.',
+    passMark: 10,
+    topics: seedComplianceTopics, quiz: seedComplianceQuiz
+  },
+  cyber: {
+    id: 'cyber', icon:'🛡️', title: 'Cyber Security Awareness',
+    description:'Phishing, smishing, vishing, quishing, BEC, social engineering, passwords & passkeys, MFA fatigue, data handling and ransomware defense.',
+    passMark: 20,
+    topics: seedCyberTopics, quiz: seedCyberQuiz
+  }
+};
+var STATIC_MODULE_ORDER = ['compliance', 'cyber'];
+
 function renderHomeModules(){
   var container = document.getElementById('module-cards-container');
-  container.innerHTML = '<p style="color:var(--muted);font-size:13.5px;">Loading training modules…</p>';
+
+  var staticCardsHtml = STATIC_MODULE_ORDER.map(function(id){
+    var m = STATIC_MODULES[id];
+    return '<div class="module-card" id="module-card-'+id+'">'+
+      '<div class="module-icon">'+m.icon+'</div>'+
+      '<h2>'+m.title+'</h2>'+
+      '<p>'+m.description+'</p>'+
+      '<div id="status-'+id+'" class="module-status not-done">Checking status…</div>'+
+      '<div class="module-meta"><span>'+m.topics.length+' topics</span><span>'+m.quiz.length+' questions</span><span>Pass mark '+m.passMark+'/'+m.quiz.length+'</span></div>'+
+      '<button class="btn btn-primary" id="btn-'+id+'" onclick="openModule(\''+id+'\')">Start module</button>'+
+    '</div>';
+  }).join('');
+
+  container.innerHTML = staticCardsHtml + '<p id="dynamic-modules-loading" style="color:var(--muted);font-size:13.5px;grid-column:1/-1;">Checking for additional modules…</p>';
+
+  STATIC_MODULE_ORDER.forEach(function(id){
+    checkModuleStatusById(id, STATIC_MODULES[id].title);
+  });
 
   jsonpRequest(RESULTS_WEBAPP_URL + '?action=list_modules')
     .then(function(data){
       allModules = data.modules || [];
-      if(allModules.length === 0){
-        container.innerHTML = '<p style="color:var(--muted);font-size:13.5px;">No training modules have been set up yet. Please check back later.</p>';
-        return;
-      }
-      container.innerHTML = allModules.map(function(m){
+      var loadingEl = document.getElementById('dynamic-modules-loading');
+      if(loadingEl) loadingEl.remove();
+
+      var dynamicCardsHtml = allModules.map(function(m){
         return '<div class="module-card" id="module-card-'+m.id+'">'+
           '<div class="module-icon">'+m.icon+'</div>'+
           '<h2>'+m.title+'</h2>'+
@@ -511,11 +546,13 @@ function renderHomeModules(){
           '<button class="btn btn-primary" id="btn-'+m.id+'" onclick="openModule(\''+m.id+'\')">Start module</button>'+
         '</div>';
       }).join('');
+      container.insertAdjacentHTML('beforeend', dynamicCardsHtml);
 
       allModules.forEach(function(m){ checkModuleStatusById(m.id, m.title); });
     })
     .catch(function(err){
-      container.innerHTML = '<p style="color:var(--danger);font-size:13.5px;">Could not load training modules: '+err+'</p>';
+      var loadingEl = document.getElementById('dynamic-modules-loading');
+      if(loadingEl) loadingEl.textContent = 'Could not load additional modules: ' + err;
     });
 }
 
@@ -562,8 +599,26 @@ function openModule(moduleId){
   currentTopicIndex = 0;
   quizAnswers = {};
   showScreen('module');
-  document.getElementById('module-wrap').innerHTML = '<p style="color:var(--muted);">Loading module content…</p>';
 
+  // Built-in modules: no backend fetch needed, content is already local
+  if(STATIC_MODULES[moduleId]){
+    var sm = STATIC_MODULES[moduleId];
+    currentModuleData = {
+      module: { title: sm.title, passPercentage: null, isStatic:true, passMark: sm.passMark },
+      topics: sm.topics,
+      questions: sm.quiz
+    };
+    var r = results[moduleId];
+    if(r && r.done && r.pass){
+      renderResult(r.score, r.total, true);
+      return;
+    }
+    renderTopic();
+    return;
+  }
+
+  // Dynamic (admin-created) modules: fetch from the backend
+  document.getElementById('module-wrap').innerHTML = '<p style="color:var(--muted);">Loading module content…</p>';
   jsonpRequest(RESULTS_WEBAPP_URL + '?action=get_module_content&moduleId=' + encodeURIComponent(moduleId))
     .then(function(data){
       if(!data.found){
@@ -588,6 +643,7 @@ function getQuiz(){ return currentModuleData ? currentModuleData.questions : [];
 function getModuleTitle(){ return currentModuleData ? currentModuleData.module.title : ''; }
 function getPassMark(){
   if(!currentModuleData) return 0;
+  if(currentModuleData.module.isStatic) return currentModuleData.module.passMark;
   var total = getQuiz().length;
   return Math.ceil(total * (currentModuleData.module.passPercentage / 100));
 }
@@ -603,7 +659,7 @@ function renderTopic(){
     if(i === currentTopicIndex) cls += ' current';
     dots += '<div class="'+cls+'"></div>';
   }
-  var pointsHtml = (t.keyPoints || []).map(function(p){ return '<li>'+p+'</li>'; }).join('');
+  var pointsHtml = (t.keyPoints || t.points || []).map(function(p){ return '<li>'+p+'</li>'; }).join('');
   var isLast = currentTopicIndex === topics.length - 1;
 
   wrap.innerHTML =
@@ -649,7 +705,7 @@ function renderQuiz(){
       return '<label><input type="radio" name="q'+idx+'" value="'+oi+'" onchange="setAnswer('+idx+','+oi+')"> '+opt+'</label>';
     }).join('');
     return '<div class="quiz-q"><div class="q-num">Question '+(idx+1)+' of '+quiz.length+'</div>'+
-      '<div class="q-text">'+item.questionText+'</div>'+
+      '<div class="q-text">'+(item.questionText || item.q)+'</div>'+
       '<div class="q-options">'+optsHtml+'</div></div>';
   }).join('');
 
@@ -674,7 +730,8 @@ function submitQuiz(){
   }
   var score = 0;
   quiz.forEach(function(item, idx){
-    if(quizAnswers[idx] === item.correctIndex) score++;
+    var correctAns = (item.correctIndex !== undefined) ? item.correctIndex : item.correct;
+    if(quizAnswers[idx] === correctAns) score++;
   });
   var pass = score >= getPassMark();
   results[currentModuleId] = { done:true, score:score, total:quiz.length, pass:pass };
@@ -683,7 +740,7 @@ function submitQuiz(){
 }
 
 /* ============================= ADMIN REPORTING (Google Sheet) ============================= */
-var RESULTS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxmonA_YQY_ep5stMzq2Ol1567edwDuXyTcmUrRdTzgYr--x1q8CXAORSONBPWmlNjT/exec";
+var RESULTS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzUE5J6GW__1QSuqfB1op3hcCVv-QJKCVitWxcH8AhOGLrtKIm4r2NfmH2wP_OpnrfH/exec";
 
 function reportResultToSheet(score, total, pass){
   if(!RESULTS_WEBAPP_URL || RESULTS_WEBAPP_URL.indexOf('PASTE_YOUR') === 0){
@@ -891,6 +948,13 @@ function renderAdminTable(allRows){
 
   var failedRows = filteredRows.filter(function(r){ return r.result !== 'Pass'; });
 
+  var staticSectionsHtml = STATIC_MODULE_ORDER.map(function(id){
+    var m = STATIC_MODULES[id];
+    var rowsForModule = filteredRows.filter(function(r){ return r.module === m.title; });
+    return '<h2 style="color:var(--navy);font-size:17px;margin:26px 0 10px;">'+m.icon+' '+m.title+'</h2>'+
+      buildAdminSectionTable(rowsForModule, 'mod-'+id, false);
+  }).join('');
+
   var moduleSectionsHtml = allModules.map(function(m){
     var rowsForModule = filteredRows.filter(function(r){ return r.module === m.title; });
     return '<h2 style="color:var(--navy);font-size:17px;margin:26px 0 10px;">'+m.icon+' '+m.title+'</h2>'+
@@ -911,9 +975,8 @@ function renderAdminTable(allRows){
       '</div>'+
     '</div>'+
 
-    (allModules.length === 0
-      ? '<p style="color:var(--muted);font-size:13.5px;margin:20px 0;">No training modules exist yet — use "Manage Training Modules" below to create one, or click "Seed Default Content" to restore the original Compliance and Cyber Security modules.</p>'
-      : moduleSectionsHtml)+
+    staticSectionsHtml+
+    moduleSectionsHtml+
 
     '<h2 style="color:var(--danger);font-size:17px;margin:30px 0 10px;">⚠️ Failed / Retake Needed (all modules)</h2>'+
     buildAdminSectionTable(failedRows, 'failed', true)+
@@ -1174,9 +1237,6 @@ function renderAdminModulesSection(){
       '<div class="modal-error" id="add-module-error" style="margin-top:8px;"></div>'+
       '<button class="btn btn-primary" style="margin-top:12px;" onclick="createModuleSubmit()">+ Create Module</button>'+
     '</div>'+
-    '<div style="text-align:center;margin-bottom:10px;">'+
-      '<button class="btn btn-ghost" onclick="seedDefaultContent()">🌱 Seed Default Content (restores original Compliance &amp; Cyber Security modules)</button>'+
-    '</div>'+
     '<div id="module-content-editor"></div>';
 }
 
@@ -1397,50 +1457,5 @@ function deleteQuestionConfirm(questionId){
     .then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
 }
 
-/* ---------------- Seed default content (migrates original hardcoded modules into the Sheet) ---------------- */
-
-function seedDefaultContent(){
-  if(!confirm('This will create the original "Compliance & Workplace Conduct Awareness" and "Cyber Security Awareness" modules with all their topics and questions. Continue?')) return;
-
-  seedOneModule('📋', COMPLIANCE_TITLE, 'Code of conduct, anti-harassment, anti-discrimination, DEI, workplace respect, whistleblower protections, data confidentiality and conflict of interest.', 67, seedComplianceTopics, seedComplianceQuiz)
-    .then(function(){
-      return seedOneModule('🛡️', CYBER_TITLE, 'Phishing, smishing, vishing, quishing, BEC, social engineering, passwords & passkeys, MFA fatigue, data handling and ransomware defense.', 80, seedCyberTopics, seedCyberQuiz);
-    })
-    .then(function(){
-      alert('Default content seeded successfully.');
-      loadAdminDashboard();
-    })
-    .catch(function(err){
-      alert('Seeding failed partway through: ' + err + '. Check the Modules/Topics/Questions tabs in your Sheet to see what was created so far.');
-      loadAdminDashboard();
-    });
-}
-
-function seedOneModule(icon, title, description, passPct, topicsArr, quizArr){
-  return postToBackend({ action:'create_module', icon:icon, title:title, description:description, passPercentage:passPct })
-    .then(function(){
-      return new Promise(function(resolve){ setTimeout(resolve, 1000); });
-    })
-    .then(function(){
-      return jsonpRequest(RESULTS_WEBAPP_URL + '?action=list_modules');
-    })
-    .then(function(data){
-      var mod = (data.modules || []).filter(function(m){ return m.title === title; })[0];
-      if(!mod) throw new Error('Could not find newly created module "' + title + '"');
-      var moduleId = mod.id;
-
-      var topicPromises = topicsArr.map(function(t, idx){
-        return postToBackend({
-          action:'create_topic', moduleId:moduleId, order:idx+1,
-          icon:t.icon, title:t.title, body:t.body, keyPoints:t.points, example:t.example, tip:t.tip
-        });
-      });
-      var questionPromises = quizArr.map(function(q, idx){
-        return postToBackend({
-          action:'create_question', moduleId:moduleId, order:idx+1,
-          questionText:q.q, options:q.options, correctIndex:q.correct
-        });
-      });
-      return Promise.all(topicPromises.concat(questionPromises));
-    });
-}
+/* Note: the original 2 modules no longer need seeding — they're always
+   available as STATIC_MODULES above, independent of the Sheet/backend. */
