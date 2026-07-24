@@ -99,7 +99,8 @@ var seedComplianceTopics = [
         "<text x='350' y='260' font-size='26' text-anchor='middle'>\ud83d\udccb</text>"+
         "<text x='350' y='292' font-size='14' text-anchor='middle' fill='var(--success)' font-weight='800'>Reported to Ethics Desk \u2713</text>"+
       "</g>"+
-      "</svg>"
+      "</svg>",
+    videoUrl:"videos/code-of-conduct-vendor-gift.mp4"
   },
   {
     icon:"🚫",
@@ -869,6 +870,15 @@ function toYouTubeEmbedUrl(url){
   return 'https://www.youtube.com/embed/' + idMatch[1];
 }
 
+/* A "direct" video is an uploaded/hosted file (e.g. videos/example.mp4) rather than a YouTube link.
+   These play muted with the TTS narration continuing over them, instead of the video's own audio. */
+function isDirectVideoFile(url){
+  if(!url) return false;
+  url = String(url).trim();
+  if(toYouTubeEmbedUrl(url)) return false;
+  return /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url);
+}
+
 function renderTopic(){
   var topics = getTopics();
   var t = topics[currentTopicIndex];
@@ -887,7 +897,7 @@ function renderTopic(){
 
   var slideLabel = ['Part 1 of 3 — Overview', 'Part 2 of 3 — Pictorial Example', 'Part 3 of 3 — Key Points'][currentSubSlideIndex];
   var bodyHtml, narrationText;
-  var isVideoSlide = false;
+  var isVideoSlide = false; // true only for YouTube (own audio -> watched checkbox instead of narration)
   var embedUrl = null;
 
   if(currentSubSlideIndex === 0){
@@ -898,6 +908,7 @@ function renderTopic(){
       '</h2>'+
       '<p>'+t.body+'</p>';
   } else if(currentSubSlideIndex === 1){
+    narrationText = 'Real world example. ' + t.example;
     embedUrl = toYouTubeEmbedUrl(t.videoUrl);
     if(embedUrl){
       isVideoSlide = true;
@@ -906,15 +917,19 @@ function renderTopic(){
         '<div class="video-embed-wrap"><iframe src="'+embedUrl+'" title="'+t.title+' training video" '+
           'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>'+
         '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
+    } else if(isDirectVideoFile(t.videoUrl)){
+      // Uploaded/hosted video clip: muted, looping, with the TTS narration continuing over it (same gating as narration)
+      bodyHtml =
+        '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Video</h2>'+
+        '<div class="video-embed-wrap"><video src="'+t.videoUrl+'" autoplay muted loop playsinline></video></div>'+
+        '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
     } else if(t.illustration){
-      narrationText = 'Real world example. ' + t.example;
       bodyHtml =
         '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Pictorial Example</h2>'+
         '<div class="topic-visual">'+t.illustration+'</div>'+
         '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
     } else {
       // Graceful fallback until an illustration or video has been added for this topic
-      narrationText = 'Real world example. ' + t.example;
       bodyHtml =
         '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Example</h2>'+
         '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
@@ -1692,8 +1707,8 @@ function showTopicForm(moduleId, topicId){
       '</div>'+
       '<label>Body (main explanation shown to employees)</label>'+
       '<textarea id="tf-body" rows="4" placeholder="The main paragraph explaining this topic...">'+escapeHtml(t.body)+'</textarea>'+
-      '<label>YouTube video URL (optional — if set, this plays instead of the illustration below)</label>'+
-      '<input id="tf-videourl" type="text" value="'+escapeAttr(t.videoUrl || '')+'" placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/...">'+
+      '<label>Video (optional — a YouTube URL, or a path/URL to an uploaded .mp4 file; if set, this plays instead of the illustration below)</label>'+
+      '<input id="tf-videourl" type="text" value="'+escapeAttr(t.videoUrl || '')+'" placeholder="https://www.youtube.com/watch?v=... or videos/my-clip.mp4">'+
       '<label>Pictorial example (optional — paste SVG code; only used if no video URL is set above)</label>'+
       '<textarea id="tf-illustration" rows="3" placeholder="<svg viewBox=\'0 0 700 300\' ...>...</svg>">'+escapeHtml(t.illustration || '')+'</textarea>'+
       '<label>Real-world example</label>'+
@@ -1728,8 +1743,8 @@ function saveTopicForm(moduleId, topicId){
     errEl.textContent = 'Please fill in at least a title and body.';
     return;
   }
-  if(videoUrl && !toYouTubeEmbedUrl(videoUrl)){
-    errEl.textContent = "That doesn't look like a valid YouTube URL. Please check it and try again, or leave it blank.";
+  if(videoUrl && !toYouTubeEmbedUrl(videoUrl) && !isDirectVideoFile(videoUrl)){
+    errEl.textContent = "That doesn't look like a valid YouTube URL or video file path (.mp4/.webm/.mov). Please check it and try again, or leave it blank.";
     return;
   }
   errEl.textContent = '';
