@@ -57,7 +57,7 @@
     background:linear-gradient(90deg,var(--navy),var(--blue),var(--blue-mid),var(--navy));
   }
   .logo-wrap{display:flex;justify-content:center;margin-bottom:18px;}
-  .logo-wrap img{width:220px;height:220px;filter:drop-shadow(0 6px 14px rgba(47,159,224,.35));}
+  .logo-wrap img{width:170px;height:170px;filter:drop-shadow(0 6px 14px rgba(47,159,224,.35));}
   .portal-title{font-size:15px;color:var(--muted);margin-bottom:26px;line-height:1.5;}
   .field{text-align:left;margin-bottom:16px;}
   .field label{display:block;font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase;}
@@ -100,8 +100,8 @@
     background:#fff;border-radius:16px;padding:8px;display:flex;align-items:center;justify-content:center;
     box-shadow:0 4px 14px rgba(0,0,0,.28);flex-shrink:0;
   }
-  .app-header img{width:200px;height:200px;display:block;image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;}
-  .app-header .brand-mini{font-size:16px;font-weight:800;}
+  .app-header img{width:100px;height:100px;display:block;image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;}
+  .app-header .brand-mini{font-size:22px;font-weight:800;}
   .app-header .brand-mini span{color:var(--blue-mid);}
   .app-header .right{display:flex;align-items:center;gap:16px;font-size:13.5px;}
   .header-user{color:#cfe4f7;text-align:right;line-height:1.3;}
