@@ -100,7 +100,7 @@
     background:#fff;border-radius:16px;padding:8px;display:flex;align-items:center;justify-content:center;
     box-shadow:0 4px 14px rgba(0,0,0,.28);flex-shrink:0;
   }
-  .app-header img{width:175px;height:175px;display:block;image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;}
+  .app-header img{width:200px;height:200px;display:block;image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;}
   .app-header .brand-mini{font-size:16px;font-weight:800;}
   .app-header .brand-mini span{color:var(--blue-mid);}
   .app-header .right{display:flex;align-items:center;gap:16px;font-size:13.5px;}
