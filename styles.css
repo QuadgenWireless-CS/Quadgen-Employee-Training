@@ -302,3 +302,22 @@
 .btn-mini:hover{border-color:var(--blue);}
 .btn-mini-primary{background:var(--blue);color:#fff;border-color:var(--blue);margin-right:6px;}
 .btn-mini-primary:hover{background:#238bc9;}
+
+/* ---------- ADMIN CMS FORMS (topics/questions) ---------- */
+.cms-form{
+  background:var(--blue-light);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin:12px 0;
+}
+.cms-form h4{margin:0 0 12px;color:var(--navy);font-size:14px;text-transform:uppercase;letter-spacing:.5px;}
+.cms-form label{
+  display:block;font-size:11.5px;font-weight:700;color:var(--navy);margin:10px 0 5px;text-transform:uppercase;letter-spacing:.3px;
+}
+.cms-form input[type="text"],
+.cms-form input[type="number"],
+.cms-form textarea{
+  width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13.5px;
+  background:#fff;color:var(--ink);box-sizing:border-box;font-family:inherit;resize:vertical;
+}
+.cms-form input:focus, .cms-form textarea:focus{border-color:var(--blue);outline:none;}
+.cms-form-row{display:flex;gap:12px;align-items:flex-start;}
+.cms-form-row input[type="radio"]{margin-top:11px;accent-color:var(--blue);}
+.cms-form-actions{display:flex;gap:10px;margin-top:14px;}
