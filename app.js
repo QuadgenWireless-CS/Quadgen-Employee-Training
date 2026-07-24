@@ -618,6 +618,7 @@ function openModule(moduleId){
   currentModuleId = moduleId;
   currentModuleData = null;
   currentTopicIndex = 0;
+  currentSubSlideIndex = 0;
   quizAnswers = {};
   showScreen('module');
 
@@ -669,6 +670,49 @@ function getPassMark(){
   return Math.ceil(total * (currentModuleData.module.passPercentage / 100));
 }
 
+var currentSubSlideIndex = 0; // 0 = intro/body, 1 = key points, 2 = example
+var currentNarrationText = '';
+
+function speechSupported(){
+  return typeof window !== 'undefined' && 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
+}
+
+function narrateCurrentSlide(text){
+  currentNarrationText = text;
+  var statusEl = document.getElementById('narration-status');
+  var nextBtn = document.getElementById('slide-next-btn');
+
+  if(!speechSupported()){
+    if(nextBtn) nextBtn.disabled = false;
+    if(statusEl) statusEl.textContent = '🔇 Voice narration isn\'t supported in this browser — you may continue.';
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+  if(nextBtn) nextBtn.disabled = true;
+  if(statusEl) statusEl.textContent = '🔊 Playing narration…';
+
+  var utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 0.98;
+  utter.onend = function(){
+    if(nextBtn) nextBtn.disabled = false;
+    if(statusEl) statusEl.textContent = '✓ Narration complete — you can continue.';
+  };
+  utter.onerror = function(){
+    if(nextBtn) nextBtn.disabled = false;
+    if(statusEl) statusEl.textContent = '⚠️ Narration could not play — you may continue.';
+  };
+  window.speechSynthesis.speak(utter);
+}
+
+function replayNarration(){
+  if(currentNarrationText) narrateCurrentSlide(currentNarrationText);
+}
+
+function stopNarration(){
+  if(speechSupported()) window.speechSynthesis.cancel();
+}
+
 function renderTopic(){
   var topics = getTopics();
   var t = topics[currentTopicIndex];
@@ -680,40 +724,85 @@ function renderTopic(){
     if(i === currentTopicIndex) cls += ' current';
     dots += '<div class="'+cls+'"></div>';
   }
-  var pointsHtml = (t.keyPoints || t.points || []).map(function(p){ return '<li>'+p+'</li>'; }).join('');
-  var isLast = currentTopicIndex === topics.length - 1;
+
+  var keyPoints = t.keyPoints || t.points || [];
+  var isLastTopic = currentTopicIndex === topics.length - 1;
+  var isLastSlide = currentSubSlideIndex === 2;
+
+  var slideLabel = ['Part 1 of 3 — Overview', 'Part 2 of 3 — Key Points', 'Part 3 of 3 — Example'][currentSubSlideIndex];
+  var bodyHtml, narrationText;
+
+  if(currentSubSlideIndex === 0){
+    narrationText = t.title + '. ' + t.body;
+    bodyHtml =
+      '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+
+        '<span class="hover-tip">i<span class="tip-bubble">'+t.tip+'</span></span>'+
+      '</h2>'+
+      '<p>'+t.body+'</p>';
+  } else if(currentSubSlideIndex === 1){
+    narrationText = 'Key points to remember. ' + keyPoints.join('. ');
+    bodyHtml =
+      '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Key Points</h2>'+
+      '<div class="key-points"><div class="kp-title">Key points to remember</div><ul>'+
+        keyPoints.map(function(p){ return '<li>'+p+'</li>'; }).join('')+
+      '</ul></div>';
+  } else {
+    narrationText = 'Real world example. ' + t.example;
+    bodyHtml =
+      '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Real-World Example</h2>'+
+      '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
+  }
+
+  var isVeryFirstSlide = currentTopicIndex === 0 && currentSubSlideIndex === 0;
+  var nextLabel = (isLastTopic && isLastSlide) ? 'Proceed to assessment →' : 'Next →';
+  var nextAction = (isLastTopic && isLastSlide) ? 'startQuiz()' : 'goNextSlide()';
 
   wrap.innerHTML =
     '<div class="module-heading"><h1>'+getModuleTitle()+'</h1></div>'+
     '<div class="progress-track">'+dots+'</div>'+
-    '<div class="topic-eyebrow">Topic '+(currentTopicIndex+1)+' of '+topics.length+'</div>'+
+    '<div class="topic-eyebrow">Topic '+(currentTopicIndex+1)+' of '+topics.length+' &nbsp;·&nbsp; '+slideLabel+'</div>'+
     '<div class="topic-card">'+
-      '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+
-        '<span class="hover-tip">i<span class="tip-bubble">'+t.tip+'</span></span>'+
-      '</h2>'+
-      '<p>'+t.body+'</p>'+
-      '<div class="key-points"><div class="kp-title">Key points to remember</div><ul>'+pointsHtml+'</ul></div>'+
-      '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>'+
+      bodyHtml+
+    '</div>'+
+    '<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin:14px 0;">'+
+      '<span id="narration-status" style="font-size:13px;color:var(--muted);">🔊 Playing narration…</span>'+
+      '<button class="btn-mini" onclick="replayNarration()">↻ Replay narration</button>'+
     '</div>'+
     '<div class="topic-nav">'+
-      '<button class="btn btn-ghost" onclick="prevTopic()" '+(currentTopicIndex===0?'disabled':'')+'>&larr; Previous topic</button>'+
-      (isLast
-        ? '<button class="btn btn-primary" onclick="startQuiz()">Proceed to assessment &rarr;</button>'
-        : '<button class="btn btn-primary" onclick="nextTopic()">Next topic &rarr;</button>')+
+      '<button class="btn btn-ghost" onclick="goPrevSlide()" '+(isVeryFirstSlide?'disabled':'')+'>&larr; Previous</button>'+
+      '<button class="btn btn-primary" id="slide-next-btn" disabled onclick="'+nextAction+'">'+nextLabel+'</button>'+
     '</div>'+
-    '<div style="text-align:center;margin-top:18px;"><button class="btn-ghost btn" style="border:none;" onclick="showScreen(\'home\')">&larr; Back to home</button></div>';
+    '<div style="text-align:center;margin-top:18px;"><button class="btn-ghost btn" style="border:none;" onclick="stopNarration();showScreen(\'home\')">&larr; Back to home</button></div>';
+
+  narrateCurrentSlide(narrationText);
 }
 
-function nextTopic(){
+function goNextSlide(){
   var topics = getTopics();
-  if(currentTopicIndex < topics.length - 1){ currentTopicIndex++; renderTopic(); }
+  if(currentSubSlideIndex < 2){
+    currentSubSlideIndex++;
+    renderTopic();
+  } else if(currentTopicIndex < topics.length - 1){
+    currentTopicIndex++;
+    currentSubSlideIndex = 0;
+    renderTopic();
+  }
 }
-function prevTopic(){
-  if(currentTopicIndex > 0){ currentTopicIndex--; renderTopic(); }
+
+function goPrevSlide(){
+  if(currentSubSlideIndex > 0){
+    currentSubSlideIndex--;
+    renderTopic();
+  } else if(currentTopicIndex > 0){
+    currentTopicIndex--;
+    currentSubSlideIndex = 2;
+    renderTopic();
+  }
 }
 
 /* ============================= QUIZ ============================= */
 function startQuiz(){
+  stopNarration();
   quizAnswers = {};
   renderQuiz();
 }
