@@ -22,20 +22,43 @@ var seedComplianceTopics = [
     ],
     example:"An employee is offered a expensive gift by a vendor shortly before a contract renewal. Accepting it — even 'just this once' — creates a real or perceived conflict and must be politely declined and reported to the Ethics desk.",
     illustration:"<svg viewBox='0 0 700 300' xmlns='http://www.w3.org/2000/svg'>"+
+      "<style>"+
+        "@keyframes qgArrow{0%{stroke-dashoffset:170;opacity:0;}8%{opacity:1;}35%{stroke-dashoffset:0;opacity:1;}46%{opacity:0;}100%{opacity:0;stroke-dashoffset:0;}}"+
+        "@keyframes qgReject{0%,32%{opacity:0;transform:scale(.4);}38%{opacity:1;transform:scale(1.18);}43%{transform:scale(1);}58%{opacity:1;transform:scale(1);}64%,100%{opacity:0;transform:scale(.8);}}"+
+        "@keyframes qgReport{0%,64%{opacity:0;transform:translateY(12px);}70%{opacity:1;transform:translateY(0);}90%{opacity:1;}98%,100%{opacity:0;}}"+
+        "@keyframes qgBounce{0%,64%,100%{transform:translateY(0);}68%{transform:translateY(-6px);}72%{transform:translateY(0);}}"+
+        ".qg-arrow{stroke-dasharray:170;animation:qgArrow 8s ease-in-out infinite;}"+
+        ".qg-reject{transform-origin:400px 150px;animation:qgReject 8s ease-in-out infinite;}"+
+        ".qg-report{animation:qgReport 8s ease-in-out infinite;}"+
+        ".qg-gift{transform-origin:350px 240px;animation:qgBounce 8s ease-in-out infinite;}"+
+      "</style>"+
       "<rect width='700' height='300' fill='var(--blue-light)'/>"+
-      "<circle cx='190' cy='140' r='46' fill='var(--navy)'/>"+
-      "<rect x='140' y='186' width='100' height='90' rx='16' fill='var(--navy)'/>"+
-      "<text x='190' y='150' font-size='38' text-anchor='middle'>🧑\u200d💼</text>"+
-      "<circle cx='510' cy='140' r='46' fill='var(--blue)'/>"+
-      "<rect x='460' y='186' width='100' height='90' rx='16' fill='var(--blue)'/>"+
-      "<text x='510' y='150' font-size='38' text-anchor='middle'>🤝</text>"+
-      "<rect x='310' y='170' width='80' height='70' rx='8' fill='#f6c453' stroke='var(--navy)' stroke-width='3'/>"+
-      "<rect x='310' y='196' width='80' height='14' fill='var(--navy)'/>"+
-      "<rect x='342' y='170' width='16' height='70' fill='var(--navy)'/>"+
-      "<circle cx='400' cy='150' r='30' fill='#fdeceb' stroke='var(--danger)' stroke-width='4'/>"+
-      "<line x1='388' y1='138' x2='412' y2='162' stroke='var(--danger)' stroke-width='4' stroke-linecap='round'/>"+
-      "<line x1='412' y1='138' x2='388' y2='162' stroke='var(--danger)' stroke-width='4' stroke-linecap='round'/>"+
-      "<text x='350' y='40' font-size='18' text-anchor='middle' fill='var(--navy)' font-weight='700'>Vendor offers a gift right before contract renewal — decline &amp; report</text>"+
+      "<text x='350' y='34' font-size='17' text-anchor='middle' fill='var(--navy)' font-weight='700'>Watch the sequence: Offer &#8594; Decline &#8594; Report</text>"+
+      "<circle cx='190' cy='150' r='46' fill='var(--navy)'/>"+
+      "<rect x='140' y='196' width='100' height='90' rx='16' fill='var(--navy)'/>"+
+      "<text x='190' y='160' font-size='38' text-anchor='middle'>\ud83e\uddd1\u200d\ud83d\udcbc</text>"+
+      "<text x='190' y='300' font-size='13' text-anchor='middle' fill='var(--navy)' font-weight='700'>Vendor</text>"+
+      "<circle cx='510' cy='150' r='46' fill='var(--blue)'/>"+
+      "<rect x='460' y='196' width='100' height='90' rx='16' fill='var(--blue)'/>"+
+      "<text x='510' y='160' font-size='38' text-anchor='middle'>\ud83e\uddd1\u200d\ud83d\udcbb</text>"+
+      "<text x='510' y='300' font-size='13' text-anchor='middle' fill='var(--navy)' font-weight='700'>Employee</text>"+
+      "<g class='qg-gift'>"+
+        "<rect x='310' y='180' width='80' height='70' rx='8' fill='#f6c453' stroke='var(--navy)' stroke-width='3'/>"+
+        "<rect x='310' y='206' width='80' height='14' fill='var(--navy)'/>"+
+        "<rect x='342' y='180' width='16' height='70' fill='var(--navy)'/>"+
+      "</g>"+
+      "<line x1='236' y1='150' x2='398' y2='150' stroke='var(--navy)' stroke-width='4' stroke-linecap='round' class='qg-arrow'/>"+
+      "<polygon points='398,140 418,150 398,160' fill='var(--navy)' class='qg-arrow'/>"+
+      "<g class='qg-reject'>"+
+        "<circle cx='400' cy='150' r='34' fill='#fdeceb' stroke='var(--danger)' stroke-width='5'/>"+
+        "<line x1='386' y1='136' x2='414' y2='164' stroke='var(--danger)' stroke-width='5' stroke-linecap='round'/>"+
+        "<line x1='414' y1='136' x2='386' y2='164' stroke='var(--danger)' stroke-width='5' stroke-linecap='round'/>"+
+      "</g>"+
+      "<g class='qg-report'>"+
+        "<circle cx='350' cy='250' r='30' fill='var(--success-bg)' stroke='var(--success)' stroke-width='3'/>"+
+        "<text x='350' y='260' font-size='26' text-anchor='middle'>\ud83d\udccb</text>"+
+        "<text x='350' y='292' font-size='14' text-anchor='middle' fill='var(--success)' font-weight='800'>Reported to Ethics Desk \u2713</text>"+
+      "</g>"+
       "</svg>"
   },
   {
