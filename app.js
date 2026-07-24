@@ -858,6 +858,17 @@ function stopNarration(){
   if(speechSupported()) window.speechSynthesis.cancel();
 }
 
+/* Converts any common YouTube URL format into a proper embeddable URL.
+   Returns null if the input doesn't look like a valid YouTube link. */
+function toYouTubeEmbedUrl(url){
+  if(!url) return null;
+  url = String(url).trim();
+  var idMatch =
+    url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{6,})/);
+  if(!idMatch) return null;
+  return 'https://www.youtube.com/embed/' + idMatch[1];
+}
+
 function renderTopic(){
   var topics = getTopics();
   var t = topics[currentTopicIndex];
@@ -876,6 +887,8 @@ function renderTopic(){
 
   var slideLabel = ['Part 1 of 3 — Overview', 'Part 2 of 3 — Pictorial Example', 'Part 3 of 3 — Key Points'][currentSubSlideIndex];
   var bodyHtml, narrationText;
+  var isVideoSlide = false;
+  var embedUrl = null;
 
   if(currentSubSlideIndex === 0){
     narrationText = t.title + '. ' + t.body;
@@ -885,14 +898,23 @@ function renderTopic(){
       '</h2>'+
       '<p>'+t.body+'</p>';
   } else if(currentSubSlideIndex === 1){
-    narrationText = 'Real world example. ' + t.example;
-    if(t.illustration){
+    embedUrl = toYouTubeEmbedUrl(t.videoUrl);
+    if(embedUrl){
+      isVideoSlide = true;
+      bodyHtml =
+        '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Video</h2>'+
+        '<div class="video-embed-wrap"><iframe src="'+embedUrl+'" title="'+t.title+' training video" '+
+          'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>'+
+        '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
+    } else if(t.illustration){
+      narrationText = 'Real world example. ' + t.example;
       bodyHtml =
         '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Pictorial Example</h2>'+
         '<div class="topic-visual">'+t.illustration+'</div>'+
         '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
     } else {
-      // Graceful fallback until an illustration has been added for this topic
+      // Graceful fallback until an illustration or video has been added for this topic
+      narrationText = 'Real world example. ' + t.example;
       bodyHtml =
         '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Example</h2>'+
         '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
@@ -910,6 +932,19 @@ function renderTopic(){
   var nextLabel = (isLastTopic && isLastSlide) ? 'Proceed to assessment →' : 'Next →';
   var nextAction = (isLastTopic && isLastSlide) ? 'startQuiz()' : 'goNextSlide()';
 
+  var footerHtml = isVideoSlide
+    ? '<div style="display:flex;align-items:center;gap:10px;justify-content:center;margin:14px 0;">'+
+        '<label style="font-size:13.5px;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:8px;">'+
+          '<input type="checkbox" id="video-watched-check" onchange="onVideoWatchedToggle()" style="width:16px;height:16px;"> '+
+          "I've watched this video"+
+        '</label>'+
+      '</div>'
+    : '<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin:14px 0;flex-wrap:wrap;">'+
+        '<span id="narration-status" style="font-size:13px;color:var(--muted);">🔊 Playing narration…</span>'+
+        '<button class="btn-mini" id="pause-narration-btn" onclick="togglePauseNarration()">⏸ Pause</button>'+
+        '<button class="btn-mini" onclick="replayNarration()">↻ Replay narration</button>'+
+      '</div>';
+
   wrap.innerHTML =
     '<div class="module-heading"><h1>'+getModuleTitle()+'</h1></div>'+
     '<div class="progress-track">'+dots+'</div>'+
@@ -917,18 +952,24 @@ function renderTopic(){
     '<div class="topic-card">'+
       bodyHtml+
     '</div>'+
-    '<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin:14px 0;flex-wrap:wrap;">'+
-      '<span id="narration-status" style="font-size:13px;color:var(--muted);">🔊 Playing narration…</span>'+
-      '<button class="btn-mini" id="pause-narration-btn" onclick="togglePauseNarration()">⏸ Pause</button>'+
-      '<button class="btn-mini" onclick="replayNarration()">↻ Replay narration</button>'+
-    '</div>'+
+    footerHtml+
     '<div class="topic-nav">'+
       '<button class="btn btn-ghost" onclick="goPrevSlide()" '+(isVeryFirstSlide?'disabled':'')+'>&larr; Previous</button>'+
       '<button class="btn btn-primary" id="slide-next-btn" disabled onclick="'+nextAction+'">'+nextLabel+'</button>'+
     '</div>'+
     '<div style="text-align:center;margin-top:18px;"><button class="btn-ghost btn" style="border:none;" onclick="stopNarration();showScreen(\'home\')">&larr; Back to home</button></div>';
 
-  narrateCurrentSlide(narrationText);
+  if(isVideoSlide){
+    // No TTS on video slides — the video has its own audio. Next unlocks only once the viewer confirms they watched it.
+  } else {
+    narrateCurrentSlide(narrationText);
+  }
+}
+
+function onVideoWatchedToggle(){
+  var checkbox = document.getElementById('video-watched-check');
+  var nextBtn = document.getElementById('slide-next-btn');
+  if(nextBtn) nextBtn.disabled = !checkbox.checked;
 }
 
 function goNextSlide(){
@@ -1638,7 +1679,7 @@ function showTopicForm(moduleId, topicId){
   if(topicId && currentEditingModuleData){
     existing = currentEditingModuleData.topics.filter(function(t){ return t.id === topicId; })[0];
   }
-  var t = existing || { icon:'📌', title:'', body:'', keyPoints:[], example:'', tip:'', illustration:'', order: (currentEditingModuleData ? currentEditingModuleData.topics.length+1 : 1) };
+  var t = existing || { icon:'📌', title:'', body:'', keyPoints:[], example:'', tip:'', illustration:'', videoUrl:'', order: (currentEditingModuleData ? currentEditingModuleData.topics.length+1 : 1) };
   var keyPointsText = (t.keyPoints || []).join('\n');
 
   slot.innerHTML =
@@ -1651,7 +1692,9 @@ function showTopicForm(moduleId, topicId){
       '</div>'+
       '<label>Body (main explanation shown to employees)</label>'+
       '<textarea id="tf-body" rows="4" placeholder="The main paragraph explaining this topic...">'+escapeHtml(t.body)+'</textarea>'+
-      '<label>Pictorial example (optional — paste SVG code to illustrate this topic visually; leave blank to just show the text example)</label>'+
+      '<label>YouTube video URL (optional — if set, this plays instead of the illustration below)</label>'+
+      '<input id="tf-videourl" type="text" value="'+escapeAttr(t.videoUrl || '')+'" placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/...">'+
+      '<label>Pictorial example (optional — paste SVG code; only used if no video URL is set above)</label>'+
       '<textarea id="tf-illustration" rows="3" placeholder="<svg viewBox=\'0 0 700 300\' ...>...</svg>">'+escapeHtml(t.illustration || '')+'</textarea>'+
       '<label>Real-world example</label>'+
       '<textarea id="tf-example" rows="2" placeholder="A short example illustrating this topic...">'+escapeHtml(t.example)+'</textarea>'+
@@ -1674,6 +1717,7 @@ function saveTopicForm(moduleId, topicId){
   var title = document.getElementById('tf-title').value.trim();
   var order = Number(document.getElementById('tf-order').value) || 1;
   var body = document.getElementById('tf-body').value.trim();
+  var videoUrl = document.getElementById('tf-videourl').value.trim();
   var illustration = document.getElementById('tf-illustration').value.trim();
   var keyPoints = document.getElementById('tf-keypoints').value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
   var example = document.getElementById('tf-example').value.trim();
@@ -1684,11 +1728,15 @@ function saveTopicForm(moduleId, topicId){
     errEl.textContent = 'Please fill in at least a title and body.';
     return;
   }
+  if(videoUrl && !toYouTubeEmbedUrl(videoUrl)){
+    errEl.textContent = "That doesn't look like a valid YouTube URL. Please check it and try again, or leave it blank.";
+    return;
+  }
   errEl.textContent = '';
 
   var payload = topicId
-    ? { action:'update_topic', id:topicId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip, illustration:illustration }
-    : { action:'create_topic', moduleId:moduleId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip, illustration:illustration };
+    ? { action:'update_topic', id:topicId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip, illustration:illustration, videoUrl:videoUrl }
+    : { action:'create_topic', moduleId:moduleId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip, illustration:illustration, videoUrl:videoUrl };
 
   postToBackend(payload).then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
 }
