@@ -100,7 +100,7 @@ var seedComplianceTopics = [
         "<text x='350' y='292' font-size='14' text-anchor='middle' fill='var(--success)' font-weight='800'>Reported to Ethics Desk \u2713</text>"+
       "</g>"+
       "</svg>",
-    videoUrl:"videos/code-of-conduct-vendor-gift.mp4"
+    videoUrl:"videos/Real_world_example_An_employee.mp4"
   },
   {
     icon:"🚫",
