@@ -898,6 +898,7 @@ function renderTopic(){
   var slideLabel = ['Part 1 of 3 — Overview', 'Part 2 of 3 — Pictorial Example', 'Part 3 of 3 — Key Points'][currentSubSlideIndex];
   var bodyHtml, narrationText;
   var isVideoSlide = false; // true only for YouTube (own audio -> watched checkbox instead of narration)
+  var isDirectVideo = false; // true for an uploaded/hosted video file (plays first, then narration follows)
   var embedUrl = null;
 
   if(currentSubSlideIndex === 0){
@@ -918,10 +919,11 @@ function renderTopic(){
           'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>'+
         '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
     } else if(isDirectVideoFile(t.videoUrl)){
-      // Uploaded/hosted video clip: muted, looping, with the TTS narration continuing over it (same gating as narration)
+      // Uploaded/hosted video clip: plays muted first; narration begins only once it finishes
+      isDirectVideo = true;
       bodyHtml =
         '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Video</h2>'+
-        '<div class="video-embed-wrap"><video id="topic-direct-video" src="'+t.videoUrl+'" autoplay muted loop playsinline controls></video></div>'+
+        '<div class="video-embed-wrap"><video id="topic-direct-video" src="'+t.videoUrl+'" autoplay muted playsinline controls></video></div>'+
         '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
     } else if(t.illustration){
       bodyHtml =
@@ -955,9 +957,9 @@ function renderTopic(){
         '</label>'+
       '</div>'
     : '<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin:14px 0;flex-wrap:wrap;">'+
-        '<span id="narration-status" style="font-size:13px;color:var(--muted);">🔊 Playing narration…</span>'+
-        '<button class="btn-mini" id="pause-narration-btn" onclick="togglePauseNarration()">⏸ Pause</button>'+
-        '<button class="btn-mini" onclick="replayNarration()">↻ Replay narration</button>'+
+        '<span id="narration-status" style="font-size:13px;color:var(--muted);">'+(isDirectVideo ? '🎬 Playing video…' : '🔊 Playing narration…')+'</span>'+
+        '<button class="btn-mini" id="pause-narration-btn" onclick="togglePauseNarration()" '+(isDirectVideo?'disabled':'')+'>⏸ Pause</button>'+
+        '<button class="btn-mini" id="replay-narration-btn" onclick="replayNarration()" '+(isDirectVideo?'disabled':'')+'>↻ Replay narration</button>'+
       '</div>';
 
   wrap.innerHTML =
@@ -982,8 +984,18 @@ function renderTopic(){
       directVideoEl.play().catch(function(err){
         console.warn('Autoplay was blocked by the browser; the viewer can press play manually.', err);
       });
+      // Sequential: let the muted video play through completely first, THEN start the narration.
+      directVideoEl.addEventListener('ended', function onEnded(){
+        directVideoEl.removeEventListener('ended', onEnded);
+        var pauseBtn = document.getElementById('pause-narration-btn');
+        var replayBtn = document.getElementById('replay-narration-btn');
+        if(pauseBtn) pauseBtn.disabled = false;
+        if(replayBtn) replayBtn.disabled = false;
+        narrateCurrentSlide(narrationText);
+      });
+    } else {
+      narrateCurrentSlide(narrationText);
     }
-    narrateCurrentSlide(narrationText);
   }
 }
 
