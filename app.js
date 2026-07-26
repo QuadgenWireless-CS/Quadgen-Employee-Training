@@ -921,7 +921,7 @@ function renderTopic(){
       // Uploaded/hosted video clip: muted, looping, with the TTS narration continuing over it (same gating as narration)
       bodyHtml =
         '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Video</h2>'+
-        '<div class="video-embed-wrap"><video src="'+t.videoUrl+'" autoplay muted loop playsinline></video></div>'+
+        '<div class="video-embed-wrap"><video id="topic-direct-video" src="'+t.videoUrl+'" autoplay muted loop playsinline controls></video></div>'+
         '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
     } else if(t.illustration){
       bodyHtml =
@@ -977,6 +977,12 @@ function renderTopic(){
   if(isVideoSlide){
     // No TTS on video slides — the video has its own audio. Next unlocks only once the viewer confirms they watched it.
   } else {
+    var directVideoEl = document.getElementById('topic-direct-video');
+    if(directVideoEl){
+      directVideoEl.play().catch(function(err){
+        console.warn('Autoplay was blocked by the browser; the viewer can press play manually.', err);
+      });
+    }
     narrateCurrentSlide(narrationText);
   }
 }
