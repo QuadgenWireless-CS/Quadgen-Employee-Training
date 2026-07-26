@@ -919,11 +919,11 @@ function renderTopic(){
           'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>'+
         '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
     } else if(isDirectVideoFile(t.videoUrl)){
-      // Uploaded/hosted video clip: plays muted first; narration begins only once it finishes
+      // Uploaded/hosted video clip: plays with its own audio first; narration begins only once it finishes
       isDirectVideo = true;
       bodyHtml =
         '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Video</h2>'+
-        '<div class="video-embed-wrap"><video id="topic-direct-video" src="'+t.videoUrl+'" autoplay muted playsinline controls></video></div>'+
+        '<div class="video-embed-wrap"><video id="topic-direct-video" src="'+t.videoUrl+'" autoplay playsinline controls></video></div>'+
         '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
     } else if(t.illustration){
       bodyHtml =
