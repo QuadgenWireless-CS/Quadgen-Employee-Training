@@ -70,20 +70,13 @@
     top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;
   }
   .logo-wrap img{width:170px;height:170px;filter:drop-shadow(0 6px 14px rgba(47,159,224,.35));position:relative;z-index:1;}
-  .radar-ring{
-    position:absolute;top:50%;left:50%;width:100px;height:100px;border-radius:50%;
-    border:2px solid var(--blue-mid);transform:translate(-50%,-50%);opacity:0;z-index:0;
-    animation:qgRadarPulse 2.7s ease-out infinite;
-  }
-  .radar-ring:nth-child(2){animation-delay:.9s;}
-  .radar-ring:nth-child(3){animation-delay:1.8s;}
-  @keyframes qgRadarPulse{
-    0%{width:100px;height:100px;opacity:.55;}
-    100%{width:230px;height:230px;opacity:0;}
+  .portal-headline{
+    font-family:'Space Grotesk',var(--font);font-size:26px;font-weight:700;color:var(--navy);
+    line-height:1.25;margin:4px 0 10px;
   }
   .portal-title{
-    font-family:'Space Grotesk',var(--font);font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
-    color:var(--navy);margin-bottom:26px;line-height:1.5;
+    font-family:'Space Grotesk',var(--font);font-size:12px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+    color:var(--muted);margin-bottom:26px;line-height:1.5;
   }
   .field{text-align:left;margin-bottom:16px;}
   .field label{display:block;font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase;}
@@ -112,18 +105,12 @@
     background:radial-gradient(circle at 50% -10%, #163a63 0%, var(--navy-deep) 55%, #050d1a 100%);
     padding:40px 20px;position:relative;overflow:hidden;
   }
-  /* Signature motif: a slow radar sweep across the whole screen, plus faint range rings —
-     literal to "wireless" (signal) and "security awareness" (scanning/detection). */
-  #screen-welcome::before{
-    content:"";position:absolute;top:50%;left:50%;width:1400px;height:1400px;
-    background:conic-gradient(from 0deg, transparent 0deg, rgba(143,211,244,.16) 12deg, transparent 26deg, transparent 360deg);
-    transform:translate(-50%,-50%);animation:qgRadarSweep 9s linear infinite;pointer-events:none;
-  }
-  #screen-welcome::after{
-    content:"";position:absolute;top:50%;left:50%;width:900px;height:900px;
-    border:1px solid rgba(143,211,244,.12);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;
-  }
-  @keyframes qgRadarSweep{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
+  /* Signature motif: a live wireless network mesh — connected nodes with data pulses
+     traveling between them, literal to a wireless company's own technology. */
+  #network-mesh{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+  #network-mesh .mesh-lines path{fill:none;stroke:var(--blue-mid);stroke-width:1;opacity:.16;}
+  #network-mesh .mesh-nodes circle{fill:var(--blue-mid);opacity:.5;}
+  #network-mesh .mesh-pulse{fill:#fff;opacity:.9;filter:drop-shadow(0 0 4px var(--blue-mid));}
   .login-error{color:var(--danger);font-size:13px;margin:-6px 0 14px;text-align:left;min-height:16px;}
   .login-card .btn-primary{
     width:100%;margin-top:6px;padding:14px;font-size:15.5px;
