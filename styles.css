@@ -213,7 +213,7 @@
   #screen-home{
     min-height:100vh;
     background:
-      linear-gradient(rgba(5,15,30,.55), rgba(5,15,30,.62)),
+      linear-gradient(rgba(5,15,30,.32), rgba(5,15,30,.4)),
       url('images/tech-scope-banner.jpg') center/cover no-repeat fixed;
   }
   #screen-home .wrap{max-width:1000px;margin:0 auto;padding:46px 24px 70px;}
