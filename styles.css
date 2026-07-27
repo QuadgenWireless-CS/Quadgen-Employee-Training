@@ -108,9 +108,9 @@
   /* Signature motif: a live wireless network mesh — connected nodes with data pulses
      traveling between them, literal to a wireless company's own technology. */
   #network-mesh{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
-  #network-mesh .mesh-lines path{fill:none;stroke:var(--blue-mid);stroke-width:1;opacity:.16;}
-  #network-mesh .mesh-nodes circle{fill:var(--blue-mid);opacity:.5;}
   #network-mesh .mesh-pulse{fill:#fff;opacity:.9;filter:drop-shadow(0 0 4px var(--blue-mid));}
+  #network-mesh .twinkle-dots circle{animation:qgTwinkle 3.2s ease-in-out infinite;}
+  @keyframes qgTwinkle{0%,100%{opacity:.15;}50%{opacity:.85;}}
   .login-error{color:var(--danger);font-size:13px;margin:-6px 0 14px;text-align:left;min-height:16px;}
   .login-card .btn-primary{
     width:100%;margin-top:6px;padding:14px;font-size:15.5px;
