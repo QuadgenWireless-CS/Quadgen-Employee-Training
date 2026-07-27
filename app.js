@@ -1,4 +1,95 @@
 /* ============================= STATE ============================= */
+/* ============================= BACKGROUND NETWORK MESH (shared by welcome + login screens) ============================= */
+function buildNetworkMeshSVG(prefix){
+  var sig = ['sig1','sig2','sig3'].map(function(id){ return prefix+'-'+id; });
+  var xp  = ['x1','x2','x3','x4','x5','x6','x7','x8'].map(function(id){ return prefix+'-'+id; });
+
+  return ''+
+  '<svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" '+
+       'xmlns:xlink="http://www.w3.org/1999/xlink" '+
+       'style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;">'+
+    '<g class="tower" stroke="#8fd3f4" stroke-width="1.5" fill="none" opacity=".4">'+
+      '<path d="M90,560 L130,120 L170,560"/>'+
+      '<path d="M100,460 L160,460"/><path d="M105,360 L155,360"/><path d="M112,260 L148,260"/>'+
+      '<line x1="130" y1="120" x2="130" y2="90"/>'+
+    '</g>'+
+    '<g class="tower" stroke="#8fd3f4" stroke-width="1.5" fill="none" opacity=".4">'+
+      '<path d="M300,560 L345,60 L390,560"/>'+
+      '<path d="M312,440 L378,440"/><path d="M318,320 L372,320"/><path d="M326,200 L364,200"/>'+
+      '<line x1="345" y1="60" x2="345" y2="26"/>'+
+    '</g>'+
+    '<g class="tower" stroke="#8fd3f4" stroke-width="1.5" fill="none" opacity=".4">'+
+      '<path d="M540,560 L580,150 L620,560"/>'+
+      '<path d="M550,470 L610,470"/><path d="M555,380 L605,380"/><path d="M562,290 L598,290"/>'+
+      '<line x1="580" y1="150" x2="580" y2="118"/>'+
+    '</g>'+
+    '<g class="tower" stroke="#8fd3f4" stroke-width="1.5" fill="none" opacity=".4">'+
+      '<path d="M700,560 L735,220 L770,560"/>'+
+      '<path d="M709,470 L761,470"/><path d="M714,390 L756,390"/>'+
+      '<line x1="735" y1="220" x2="735" y2="190"/>'+
+    '</g>'+
+
+    '<path id="'+sig[0]+'" d="M130,90 Q237,20 345,26" fill="none" stroke="none"/>'+
+    '<path id="'+sig[1]+'" d="M345,26 Q462,-20 580,118" fill="none" stroke="none"/>'+
+    '<path id="'+sig[2]+'" d="M580,118 Q657,150 735,190" fill="none" stroke="none"/>'+
+
+    '<path id="'+xp[0]+'" d="M20,40 L780,560" fill="none" stroke="none"/>'+
+    '<path id="'+xp[1]+'" d="M780,60 L20,540" fill="none" stroke="none"/>'+
+    '<path id="'+xp[2]+'" d="M40,300 L760,260" fill="none" stroke="none"/>'+
+    '<path id="'+xp[3]+'" d="M200,20 L560,580" fill="none" stroke="none"/>'+
+    '<path id="'+xp[4]+'" d="M600,10 L180,590" fill="none" stroke="none"/>'+
+    '<path id="'+xp[5]+'" d="M10,480 L700,60" fill="none" stroke="none"/>'+
+    '<path id="'+xp[6]+'" d="M760,400 L120,120" fill="none" stroke="none"/>'+
+    '<path id="'+xp[7]+'" d="M400,10 L400,590" fill="none" stroke="none"/>'+
+
+    '<g class="signal-arc" fill="none" stroke="#8fd3f4" stroke-width="1" opacity=".25">'+
+      '<use href="#'+sig[0]+'"/><use href="#'+sig[1]+'"/><use href="#'+sig[2]+'"/>'+
+    '</g>'+
+
+    '<circle class="mesh-pulse" r="3.5"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0s"><mpath href="#'+sig[0]+'" xlink:href="#'+sig[0]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="3.5"><animateMotion dur="2.6s" repeatCount="indefinite" begin=".9s"><mpath href="#'+sig[1]+'" xlink:href="#'+sig[1]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="3.5"><animateMotion dur="2.6s" repeatCount="indefinite" begin="1.8s"><mpath href="#'+sig[2]+'" xlink:href="#'+sig[2]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="3"><animateMotion dur="3.1s" repeatCount="indefinite" begin="1.3s"><mpath href="#'+sig[0]+'" xlink:href="#'+sig[0]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="3"><animateMotion dur="3.1s" repeatCount="indefinite" begin="2.2s"><mpath href="#'+sig[1]+'" xlink:href="#'+sig[1]+'"/></animateMotion></circle>'+
+
+    '<circle class="mesh-pulse" r="2.5"><animateMotion dur=".8s" repeatCount="indefinite" begin="0s"><mpath href="#'+xp[0]+'" xlink:href="#'+xp[0]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="3"><animateMotion dur="1.4s" repeatCount="indefinite" begin=".3s"><mpath href="#'+xp[1]+'" xlink:href="#'+xp[1]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="2"><animateMotion dur=".6s" repeatCount="indefinite" begin=".6s"><mpath href="#'+xp[2]+'" xlink:href="#'+xp[2]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="3.5"><animateMotion dur="2.2s" repeatCount="indefinite" begin="0s"><mpath href="#'+xp[3]+'" xlink:href="#'+xp[3]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="2.5"><animateMotion dur="1s" repeatCount="indefinite" begin="1.1s"><mpath href="#'+xp[4]+'" xlink:href="#'+xp[4]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="3"><animateMotion dur="1.7s" repeatCount="indefinite" begin=".2s"><mpath href="#'+xp[5]+'" xlink:href="#'+xp[5]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="2"><animateMotion dur=".9s" repeatCount="indefinite" begin="1.4s"><mpath href="#'+xp[6]+'" xlink:href="#'+xp[6]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="3"><animateMotion dur="2.6s" repeatCount="indefinite" begin=".5s"><mpath href="#'+xp[7]+'" xlink:href="#'+xp[7]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="2.5"><animateMotion dur="1.3s" repeatCount="indefinite" begin="1.8s"><mpath href="#'+xp[0]+'" xlink:href="#'+xp[0]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="2"><animateMotion dur=".7s" repeatCount="indefinite" begin="2.1s"><mpath href="#'+xp[3]+'" xlink:href="#'+xp[3]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="3"><animateMotion dur="1.9s" repeatCount="indefinite" begin=".9s"><mpath href="#'+xp[5]+'" xlink:href="#'+xp[5]+'"/></animateMotion></circle>'+
+    '<circle class="mesh-pulse" r="2.5"><animateMotion dur="1.1s" repeatCount="indefinite" begin="1.6s"><mpath href="#'+xp[1]+'" xlink:href="#'+xp[1]+'"/></animateMotion></circle>'+
+
+    '<g class="twinkle-dots" fill="#8fd3f4">'+
+      '<circle cx="230" cy="140" r="2" style="animation-delay:0s;animation-duration:4.6s;"/>'+
+      '<circle cx="470" cy="90" r="1.5" style="animation-delay:.7s;animation-duration:5.4s;"/>'+
+      '<circle cx="650" cy="60" r="2" style="animation-delay:1.4s;animation-duration:4.2s;"/>'+
+      '<circle cx="60" cy="200" r="1.5" style="animation-delay:2.1s;animation-duration:5.8s;"/>'+
+      '<circle cx="410" cy="180" r="2" style="animation-delay:.4s;animation-duration:4.9s;"/>'+
+      '<circle cx="620" cy="340" r="1.5" style="animation-delay:1.8s;animation-duration:5.1s;"/>'+
+      '<circle cx="180" cy="380" r="2" style="animation-delay:1.1s;animation-duration:4.4s;"/>'+
+      '<circle cx="750" cy="380" r="1.5" style="animation-delay:2.6s;animation-duration:5.6s;"/>'+
+      '<circle cx="330" cy="60" r="1.5" style="animation-delay:1.6s;animation-duration:4.8s;"/>'+
+      '<circle cx="530" cy="240" r="2" style="animation-delay:.9s;animation-duration:5.3s;"/>'+
+      '<circle cx="150" cy="280" r="1.5" style="animation-delay:2.3s;animation-duration:4.5s;"/>'+
+      '<circle cx="700" cy="150" r="2" style="animation-delay:.2s;animation-duration:5.7s;"/>'+
+    '</g>'+
+  '</svg>';
+}
+
+function mountNetworkMeshes(){
+  var welcomeHost = document.getElementById('mesh-welcome');
+  var loginHost = document.getElementById('mesh-login');
+  if(welcomeHost) welcomeHost.innerHTML = buildNetworkMeshSVG('w');
+  if(loginHost) loginHost.innerHTML = buildNetworkMeshSVG('l');
+}
+mountNetworkMeshes();
+
 var user = { name:"", empid:"", email:"" };
 var results = {}; // dynamic, keyed by moduleId: { [moduleId]: {done,score,total,pass} }
 var allModules = []; // cached list of modules fetched from the backend
