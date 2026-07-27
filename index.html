@@ -10,11 +10,11 @@
 
 <!-- ===================== WELCOME / ROLE SELECT SCREEN ===================== -->
 <div id="screen-welcome">
-  <div class="login-card">
+  <div class="login-card" style="position:relative;">
+    <span onclick="startLogin('admin')" title="" style="position:absolute;top:14px;right:18px;font-size:15px;opacity:.35;cursor:pointer;user-select:none;">🔒</span>
     <div class="logo-wrap"><img src="logo.png" alt="QuadGen Wireless Solutions logo"></div>
     <p class="portal-title">Employee Awareness Training Portal<br>Please choose how you'd like to sign in.</p>
-    <button class="btn btn-primary" style="width:100%;margin-bottom:14px;" onclick="startLogin('employee')">👤 Login as Employee</button>
-    <button class="btn btn-outline" style="width:100%;" onclick="startLogin('admin')">🔐 Login as Admin</button>
+    <button class="btn btn-primary" style="width:100%;" onclick="startLogin('employee')">Let's get started</button>
   </div>
 </div>
 
