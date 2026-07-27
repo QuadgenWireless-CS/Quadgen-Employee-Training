@@ -39,6 +39,15 @@
     <path id="sig1" d="M130,90 Q237,20 345,26" fill="none" stroke="none"/>
     <path id="sig2" d="M345,26 Q462,-20 580,118" fill="none" stroke="none"/>
     <path id="sig3" d="M580,118 Q657,150 735,190" fill="none" stroke="none"/>
+
+    <path id="x1" d="M20,40 L780,560" fill="none" stroke="none"/>
+    <path id="x2" d="M780,60 L20,540" fill="none" stroke="none"/>
+    <path id="x3" d="M40,300 L760,260" fill="none" stroke="none"/>
+    <path id="x4" d="M200,20 L560,580" fill="none" stroke="none"/>
+    <path id="x5" d="M600,10 L180,590" fill="none" stroke="none"/>
+    <path id="x6" d="M10,480 L700,60" fill="none" stroke="none"/>
+    <path id="x7" d="M760,400 L120,120" fill="none" stroke="none"/>
+    <path id="x8" d="M400,10 L400,590" fill="none" stroke="none"/>
     <g class="signal-arc" fill="none" stroke="#8fd3f4" stroke-width="1" opacity=".25">
       <use href="#sig1"/><use href="#sig2"/><use href="#sig3"/>
     </g>
@@ -46,18 +55,35 @@
     <circle class="mesh-pulse" r="3.5"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0s"><mpath href="#sig1"/></animateMotion></circle>
     <circle class="mesh-pulse" r="3.5"><animateMotion dur="2.6s" repeatCount="indefinite" begin=".9s"><mpath href="#sig2"/></animateMotion></circle>
     <circle class="mesh-pulse" r="3.5"><animateMotion dur="2.6s" repeatCount="indefinite" begin="1.8s"><mpath href="#sig3"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="3"><animateMotion dur="3.1s" repeatCount="indefinite" begin="1.3s"><mpath href="#sig1"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="3"><animateMotion dur="3.1s" repeatCount="indefinite" begin="2.2s"><mpath href="#sig2"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3" ><animateMotion dur="3.1s" repeatCount="indefinite" begin="1.3s"><mpath href="#sig1"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3" ><animateMotion dur="3.1s" repeatCount="indefinite" begin="2.2s"><mpath href="#sig2"/></animateMotion></circle>
+
+    <circle class="mesh-pulse" r="2.5"><animateMotion dur=".8s"  repeatCount="indefinite" begin="0s"   ><mpath href="#x1"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3"  ><animateMotion dur="1.4s" repeatCount="indefinite" begin=".3s" ><mpath href="#x2"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2"  ><animateMotion dur=".6s"  repeatCount="indefinite" begin=".6s" ><mpath href="#x3"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3.5"><animateMotion dur="2.2s" repeatCount="indefinite" begin="0s"   ><mpath href="#x4"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2.5"><animateMotion dur="1s"   repeatCount="indefinite" begin="1.1s"><mpath href="#x5"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3"  ><animateMotion dur="1.7s" repeatCount="indefinite" begin=".2s" ><mpath href="#x6"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2"  ><animateMotion dur=".9s"  repeatCount="indefinite" begin="1.4s"><mpath href="#x7"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3"  ><animateMotion dur="2.6s" repeatCount="indefinite" begin=".5s" ><mpath href="#x8"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2.5"><animateMotion dur="1.3s" repeatCount="indefinite" begin="1.8s"><mpath href="#x1"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2"  ><animateMotion dur=".7s"  repeatCount="indefinite" begin="2.1s"><mpath href="#x4"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3"  ><animateMotion dur="1.9s" repeatCount="indefinite" begin=".9s" ><mpath href="#x6"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2.5"><animateMotion dur="1.1s" repeatCount="indefinite" begin="1.6s"><mpath href="#x2"/></animateMotion></circle>
 
     <g class="twinkle-dots" fill="#8fd3f4">
-      <circle cx="230" cy="140" r="2" style="animation-delay:0s;"/>
-      <circle cx="470" cy="90" r="1.5" style="animation-delay:.7s;"/>
-      <circle cx="650" cy="60" r="2" style="animation-delay:1.4s;"/>
-      <circle cx="60" cy="200" r="1.5" style="animation-delay:2.1s;"/>
-      <circle cx="410" cy="180" r="2" style="animation-delay:.4s;"/>
-      <circle cx="620" cy="340" r="1.5" style="animation-delay:1.8s;"/>
-      <circle cx="180" cy="380" r="2" style="animation-delay:1.1s;"/>
-      <circle cx="750" cy="380" r="1.5" style="animation-delay:2.6s;"/>
+      <circle cx="230" cy="140" r="2" style="animation-delay:0s;animation-duration:4.6s;"/>
+      <circle cx="470" cy="90" r="1.5" style="animation-delay:.7s;animation-duration:5.4s;"/>
+      <circle cx="650" cy="60" r="2" style="animation-delay:1.4s;animation-duration:4.2s;"/>
+      <circle cx="60" cy="200" r="1.5" style="animation-delay:2.1s;animation-duration:5.8s;"/>
+      <circle cx="410" cy="180" r="2" style="animation-delay:.4s;animation-duration:4.9s;"/>
+      <circle cx="620" cy="340" r="1.5" style="animation-delay:1.8s;animation-duration:5.1s;"/>
+      <circle cx="180" cy="380" r="2" style="animation-delay:1.1s;animation-duration:4.4s;"/>
+      <circle cx="750" cy="380" r="1.5" style="animation-delay:2.6s;animation-duration:5.6s;"/>
+      <circle cx="330" cy="60" r="1.5" style="animation-delay:1.6s;animation-duration:4.8s;"/>
+      <circle cx="530" cy="240" r="2" style="animation-delay:.9s;animation-duration:5.3s;"/>
+      <circle cx="150" cy="280" r="1.5" style="animation-delay:2.3s;animation-duration:4.5s;"/>
+      <circle cx="700" cy="150" r="2" style="animation-delay:.2s;animation-duration:5.7s;"/>
     </g>
   </svg>
   <div class="login-card" style="position:relative;">
