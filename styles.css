@@ -74,6 +74,9 @@
     font-family:'Space Grotesk',var(--font);font-size:26px;font-weight:700;color:var(--navy);
     line-height:1.25;margin:4px 0 10px;
   }
+  .portal-quote{
+    font-style:italic;font-size:14px;color:var(--muted);line-height:1.6;margin:0 0 26px;padding:0 6px;
+  }
   .portal-title{
     font-family:'Space Grotesk',var(--font);font-size:12px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
     color:var(--muted);margin-bottom:26px;line-height:1.5;
@@ -108,9 +111,19 @@
   /* Signature motif: a live wireless network mesh — connected nodes with data pulses
      traveling between them, literal to a wireless company's own technology. */
   #network-mesh{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
-  #network-mesh .mesh-pulse{fill:#fff;opacity:.9;filter:drop-shadow(0 0 4px var(--blue-mid));}
-  #network-mesh .twinkle-dots circle{animation:qgTwinkle 3.2s ease-in-out infinite;}
-  @keyframes qgTwinkle{0%,100%{opacity:.15;}50%{opacity:.85;}}
+  #network-mesh .mesh-pulse{fill:#fff;opacity:.9;filter:drop-shadow(0 0 4px var(--blue-mid));animation:qgSparkle 1.4s ease-in-out infinite;}
+  #network-mesh .twinkle-dots circle{
+    transform-box:fill-box;transform-origin:center;
+    animation:qgTwinkleFloat 5s ease-in-out infinite;
+  }
+  @keyframes qgTwinkleFloat{
+    0%{opacity:.15;transform:translate(0,0) scale(1);}
+    25%{opacity:.9;transform:translate(10px,-16px) scale(1.3);}
+    50%{opacity:.35;transform:translate(-6px,-28px) scale(.9);}
+    75%{opacity:.9;transform:translate(8px,-14px) scale(1.2);}
+    100%{opacity:.15;transform:translate(0,0) scale(1);}
+  }
+  @keyframes qgSparkle{0%,100%{opacity:.5;r:2.5;}50%{opacity:1;r:4;}}
   .login-error{color:var(--danger);font-size:13px;margin:-6px 0 14px;text-align:left;min-height:16px;}
   .login-card .btn-primary{
     width:100%;margin-top:6px;padding:14px;font-size:15.5px;
