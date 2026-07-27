@@ -45,7 +45,7 @@
   #screen-login{
     min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
     background:radial-gradient(circle at 50% -10%, #163a63 0%, var(--navy-deep) 55%, #050d1a 100%);
-    padding:40px 20px;
+    padding:40px 20px;position:relative;overflow:hidden;
   }
   .login-card{
     background:#fff;border-radius:20px;box-shadow:0 30px 70px rgba(0,0,0,.4), 0 0 0 1px rgba(143,211,244,.15);
@@ -75,8 +75,11 @@
     line-height:1.25;margin:4px 0 10px;
   }
   .portal-quote{
-    font-style:italic;font-size:14px;color:var(--muted);line-height:1.6;margin:0 0 26px;padding:0 6px;
+    font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:600;
+    font-size:17px;color:var(--navy);line-height:1.55;margin:0 0 28px;padding:0 14px;position:relative;
   }
+  .portal-quote::before{content:'"';font-size:34px;color:var(--blue-mid);position:absolute;left:-6px;top:8px;font-family:'Playfair Display',serif;font-style:normal;line-height:0;}
+  .portal-quote::after{content:'"';font-size:34px;color:var(--blue-mid);position:absolute;right:-6px;bottom:-6px;font-family:'Playfair Display',serif;font-style:normal;line-height:0;}
   .portal-title{
     font-family:'Space Grotesk',var(--font);font-size:12px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
     color:var(--muted);margin-bottom:26px;line-height:1.5;
@@ -109,13 +112,14 @@
     padding:40px 20px;position:relative;overflow:hidden;
   }
   /* Signature motif: a live wireless network mesh — connected nodes with data pulses
-     traveling between them, literal to a wireless company's own technology. */
-  #network-mesh{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
-  #network-mesh .mesh-pulse{
+     traveling between them, literal to a wireless company's own technology. Shared by
+     the welcome screen and the login screen via .mesh-host containers. */
+  .mesh-host{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+  .mesh-host .mesh-pulse{
     fill:#fff;opacity:.9;filter:drop-shadow(0 0 4px var(--blue-mid));
     transform-box:fill-box;transform-origin:center;animation:qgSparkle 1s ease-in-out infinite;
   }
-  #network-mesh .twinkle-dots circle{
+  .mesh-host .twinkle-dots circle{
     transform-box:fill-box;transform-origin:center;
     animation:qgTwinkleFloat 5s ease-in-out infinite;
   }
