@@ -203,21 +203,21 @@ var seedComplianceTopics = [
 ];
 
 var seedComplianceQuiz = [
-  {q:"What is the primary purpose of QuadGen's Code of Conduct?", options:["To restrict employee benefits","To set the minimum standard of honest and ethical behavior for everyone, regardless of seniority","To apply only to new employees during probation","To replace local laws where they are inconvenient"], correct:1},
-  {q:"An employee is offered an expensive gift by a vendor just before a contract renewal. What should they do?", options:["Accept it quietly since it's a personal gift","Accept it and mention it later if asked","Politely decline and report it to the Ethics desk","Accept but split it with the team"], correct:2},
-  {q:"Which of the following best describes sexual harassment under POSH policy?", options:["Only unwanted physical touching counts","Only in-person conduct is covered, not chat or email","Unwelcome verbal, non-verbal or physical conduct of a sexual nature, in any work setting","Only conduct that is intended to offend"], correct:2},
-  {q:"An employee wants to report a harassment concern but is afraid of career consequences. What does QuadGen's POSH policy guarantee?", options:["Nothing, they must accept the risk","Protection from retaliation and a confidential investigation process","The complaint will only be reviewed if a manager approves it first","Anonymous complaints are automatically dismissed"], correct:1},
-  {q:"Which hiring practice would violate QuadGen's Anti-Discrimination policy?", options:["Selecting the most qualified candidate based on documented criteria","Rejecting a candidate due to assumptions about their age or family status","Interviewing all shortlisted candidates using the same rubric","Providing reasonable accommodation to a candidate with a disability"], correct:1},
-  {q:"What is required for equal pay for equal work at QuadGen?", options:["It is a courtesy offered only in some regions","It is a legal and ethical obligation applied consistently","It only applies to management roles","It applies only if requested by the employee"], correct:1},
-  {q:"What is the key difference between diversity and inclusion?", options:["They mean exactly the same thing","Diversity is the mix of people present; inclusion is whether everyone genuinely feels heard and valued","Diversity applies to customers; inclusion applies to employees","Inclusion is a legal requirement, diversity is optional"], correct:1},
-  {q:"In a meeting, a quieter colleague's idea is ignored, then praised when repeated by someone else. What is the appropriate DEI-aligned response?", options:["Let it go since the idea was still heard eventually","Redirect credit to the original contributor", "Discuss it privately only, never in the meeting","Assume it was an honest mistake and ignore it"], correct:1},
-  {q:"A senior employee shouts and mocks a junior colleague during a project review. Even if the criticism was technically valid, this is:", options:["Acceptable because seniority allows a firmer tone","A workplace respect and professional conduct violation","Only a concern if the junior employee complains publicly","Standard practice in high-pressure reviews"], correct:1},
-  {q:"Which of the following is considered unprofessional conduct at a company event?", options:["Networking with colleagues from other teams","Using alcohol consumption as an excuse for inappropriate behavior","Leaving early due to a prior commitment","Discussing work projects informally"], correct:1},
-  {q:"What protection does a whistleblower have under QuadGen policy if their good-faith report later turns out to be incorrect?", options:["They can be disciplined for wasting investigators' time","They remain protected as long as the report was made in good faith","They must publicly retract the claim","Protection only applies to anonymous reports"], correct:1},
-  {q:"Which of these is a valid channel for raising an ethics concern at QuadGen?", options:["Only your direct manager","Manager, HR, the Ethics Hotline, or anonymous reporting channels","Only the anonymous hotline","Social media posts about the company"], correct:1},
-  {q:"An employee discusses an unreleased product feature at a public coffee shop. This is a violation of:", options:["Conflict of Interest policy","Data Privacy & Confidentiality policy","Whistleblower policy","Anti-Discrimination policy"], correct:1},
-  {q:"What is the 'need to know' principle in data confidentiality?", options:["All employees should have access to all company data","Access to sensitive data should be limited to what is required for your role","Only executives need to know sensitive information","Data can be shared freely within the same department"], correct:1},
-  {q:"A procurement manager's spouse owns a company bidding for a vendor contract. What should the manager do?", options:["Say nothing since it is a personal matter","Disclose the relationship and recuse themselves from the vendor decision","Approve the bid quietly to avoid awkwardness","Ask a friend to approve it instead"], correct:1}
+  {q:"What is the primary purpose of QuadGen's Code of Conduct?", options:["To restrict employee benefits","To set the minimum standard of honest and ethical behavior for everyone, regardless of seniority","To apply only to new employees during probation","To replace local laws where they are inconvenient"], correct:1, explanation:"The Code of Conduct sets one consistent standard of honest, ethical behavior for every employee, regardless of seniority or tenure."},
+  {q:"An employee is offered an expensive gift by a vendor just before a contract renewal. What should they do?", options:["Accept it quietly since it's a personal gift","Accept it and mention it later if asked","Politely decline and report it to the Ethics desk","Accept but split it with the team"], correct:2, explanation:"Accepting a gift right before a business decision creates a real or perceived conflict of interest — the correct response is to decline and report it to the Ethics desk."},
+  {q:"Which of the following best describes sexual harassment under POSH policy?", options:["Only unwanted physical touching counts","Only in-person conduct is covered, not chat or email","Unwelcome verbal, non-verbal or physical conduct of a sexual nature, in any work setting","Only conduct that is intended to offend"], correct:2, explanation:"POSH covers unwelcome verbal, non-verbal or physical conduct of a sexual nature in any work setting, including chat, email and off-site events, not just in-person contact."},
+  {q:"An employee wants to report a harassment concern but is afraid of career consequences. What does QuadGen's POSH policy guarantee?", options:["Nothing, they must accept the risk","Protection from retaliation and a confidential investigation process","The complaint will only be reviewed if a manager approves it first","Anonymous complaints are automatically dismissed"], correct:1, explanation:"QuadGen's POSH policy guarantees protection from retaliation and a confidential investigation, so employees can report without fear of career consequences."},
+  {q:"Which hiring practice would violate QuadGen's Anti-Discrimination policy?", options:["Selecting the most qualified candidate based on documented criteria","Rejecting a candidate due to assumptions about their age or family status","Interviewing all shortlisted candidates using the same rubric","Providing reasonable accommodation to a candidate with a disability"], correct:1, explanation:"Rejecting a candidate based on assumptions about age or family status, rather than documented job-related criteria, is unlawful discrimination even if unintentional."},
+  {q:"What is required for equal pay for equal work at QuadGen?", options:["It is a courtesy offered only in some regions","It is a legal and ethical obligation applied consistently","It only applies to management roles","It applies only if requested by the employee"], correct:1, explanation:"Equal pay for equal work is a legal and ethical obligation applied consistently across the organization, not a courtesy limited to certain roles."},
+  {q:"What is the key difference between diversity and inclusion?", options:["They mean exactly the same thing","Diversity is the mix of people present; inclusion is whether everyone genuinely feels heard and valued","Diversity applies to customers; inclusion applies to employees","Inclusion is a legal requirement, diversity is optional"], correct:1, explanation:"Diversity is who is present; inclusion is whether those people are genuinely heard and valued — an organization can be diverse without being inclusive."},
+  {q:"In a meeting, a quieter colleague's idea is ignored, then praised when repeated by someone else. What is the appropriate DEI-aligned response?", options:["Let it go since the idea was still heard eventually","Redirect credit to the original contributor", "Discuss it privately only, never in the meeting","Assume it was an honest mistake and ignore it"], correct:1, explanation:"Redirecting credit to the original contributor is the DEI-aligned response; letting the pattern slide reinforces who gets recognized over time."},
+  {q:"A senior employee shouts and mocks a junior colleague during a project review. Even if the criticism was technically valid, this is:", options:["Acceptable because seniority allows a firmer tone","A workplace respect and professional conduct violation","Only a concern if the junior employee complains publicly","Standard practice in high-pressure reviews"], correct:1, explanation:"Delivering criticism by shouting or mocking a colleague is a conduct violation because of how it was delivered, regardless of whether the underlying feedback was valid."},
+  {q:"Which of the following is considered unprofessional conduct at a company event?", options:["Networking with colleagues from other teams","Using alcohol consumption as an excuse for inappropriate behavior","Leaving early due to a prior commitment","Discussing work projects informally"], correct:1, explanation:"Alcohol consumption is never an acceptable excuse for inappropriate behavior — the same conduct standards apply at company events as anywhere else."},
+  {q:"What protection does a whistleblower have under QuadGen policy if their good-faith report later turns out to be incorrect?", options:["They can be disciplined for wasting investigators' time","They remain protected as long as the report was made in good faith","They must publicly retract the claim","Protection only applies to anonymous reports"], correct:1, explanation:"Whistleblower protections apply as long as the report was made in good faith, even if the concern later turns out to be unfounded."},
+  {q:"Which of these is a valid channel for raising an ethics concern at QuadGen?", options:["Only your direct manager","Manager, HR, the Ethics Hotline, or anonymous reporting channels","Only the anonymous hotline","Social media posts about the company"], correct:1, explanation:"QuadGen offers multiple valid channels — manager, HR, Ethics Hotline, or anonymous reporting — so no one feels they have only one, possibly uncomfortable, option."},
+  {q:"An employee discusses an unreleased product feature at a public coffee shop. This is a violation of:", options:["Conflict of Interest policy","Data Privacy & Confidentiality policy","Whistleblower policy","Anti-Discrimination policy"], correct:1, explanation:"Discussing unreleased product details anywhere outside authorized channels, even casually in public, risks being overheard and is a confidentiality violation."},
+  {q:"What is the 'need to know' principle in data confidentiality?", options:["All employees should have access to all company data","Access to sensitive data should be limited to what is required for your role","Only executives need to know sensitive information","Data can be shared freely within the same department"], correct:1, explanation:"The 'need to know' principle limits data access strictly to what's required for a person's role, minimizing exposure even among well-intentioned employees."},
+  {q:"A procurement manager's spouse owns a company bidding for a vendor contract. What should the manager do?", options:["Say nothing since it is a personal matter","Disclose the relationship and recuse themselves from the vendor decision","Approve the bid quietly to avoid awkwardness","Ask a friend to approve it instead"], correct:1, explanation:"When a family member has a stake in a vendor bid, the correct action is to disclose the relationship and recuse yourself from that decision entirely."}
 ];
 
 /* ============================= CONTENT: CYBER SECURITY ============================= */
@@ -365,31 +365,31 @@ var seedCyberTopics = [
 ];
 
 var seedCyberQuiz = [
-  {q:"What is the key difference between phishing and spear phishing?", options:["Phishing only happens by phone","Spear phishing is a personalized attack referencing details specific to you or your organization","Phishing is always safe to click","Spear phishing only targets executives"], correct:1},
-  {q:"Before clicking a link in an email, what is the safest first step?", options:["Click it quickly before it expires","Hover over it to preview the actual destination URL","Forward it to a coworker to test first","Reply asking if it's safe"], correct:1},
-  {q:"An email creates urgency, saying your account will be suspended in 24 hours unless you click a link. This is most likely:", options:["A standard IT reminder","A phishing pressure tactic","Always a legitimate security notice","Something you should ignore without reporting"], correct:1},
-  {q:"You receive an unexpected text saying a package couldn't be delivered, with a shortened link to 'update your address'. What should you do?", options:["Tap the link since it seems harmless","Reply with your address to be safe","Avoid the link and verify through the official delivery app or number directly","Forward it to friends to warn them"], correct:2},
-  {q:"Why are shortened links (like bit.ly) risky in unexpected texts?", options:["They load slower than normal links","They hide the real destination, making it hard to verify safety before clicking","They are always fraudulent","They only work on certain phones"], correct:1},
-  {q:"A caller claiming to be from IT asks you to read out the one-time passcode just sent to your phone. What should you do?", options:["Read it out since it's IT","Hang up — legitimate IT never needs your OTP or password","Text it instead of saying it aloud","Provide half the code only"], correct:1},
-  {q:"Why can't you always trust caller ID during a suspicious phone call?", options:["Caller ID is always accurate","Caller ID can be spoofed to display a trusted number","Only mobile phones can show caller ID","Landlines cannot be spoofed"], correct:1},
-  {q:"What makes QR phishing (quishing) particularly deceptive?", options:["QR codes always contain malware","The destination link isn't visible until after scanning, unlike a normal link","QR codes cannot be scanned by phones","QR codes are illegal to use"], correct:1},
-  {q:"You receive an email asking you to scan a QR code to 'complete benefits enrollment.' What is the safest action?", options:["Scan it immediately since it's from HR","Preview the destination after scanning, or better, navigate to the HR site directly instead","Forward the QR code to a personal email","Ignore email security entirely for HR requests"], correct:1},
-  {q:"What is a defining feature of Business Email Compromise (BEC)?", options:["It always contains a virus attachment","It is a highly targeted attack using a convincing, urgent request, often impersonating an executive, with no malware involved","It only targets personal Gmail accounts","It is always easy to detect due to spelling errors"], correct:1},
-  {q:"Finance receives an urgent email 'from the CFO' asking for a wire transfer to a new vendor account, marked confidential. What should happen next?", options:["Process it immediately since it's urgent and confidential","Verify by calling the CFO directly using a known number before acting","Reply to the email asking for confirmation","Ask a junior colleague to approve it instead"], correct:1},
-  {q:"What should be verified before changing any vendor's payment or bank details?", options:["Nothing, email instructions are sufficient","The request should be confirmed by phone using an independently sourced, known number","Only the email signature needs to match","Just confirm the amount is under a certain limit"], correct:1},
-  {q:"What is 'tailgating' in the context of social engineering?", options:["Sending too many phishing emails at once","Following an authorized employee through a secure door without badging in independently","A type of ransomware","A password cracking technique"], correct:1},
-  {q:"Which of these best describes 'pretexting'?", options:["Sending a text message before a call","Building a false but plausible backstory over time to earn trust and extract information","A type of QR code attack","Automatically blocking suspicious emails"], correct:1},
-  {q:"What advantage do passkeys have over traditional passwords?", options:["They are shorter and easier to guess","There is no shared secret to steal or phish, since they're tied to your device","They never need to be set up","They work without any device at all"], correct:1},
-  {q:"What is the risk of reusing the same password across personal and work accounts?", options:["There is no risk if the password is strong","If one account is breached, attackers can try the same password elsewhere (credential stuffing)","It slows down login times","It is required by most security policies"], correct:1},
-  {q:"What is the recommended way to store and manage passwords?", options:["Write them on a sticky note near your desk","Use a company-approved password manager","Reuse one strong password everywhere","Share them with a trusted coworker as backup"], correct:1},
-  {q:"What is MFA fatigue (push bombing)?", options:["A user forgetting their MFA device","An attacker repeatedly sending MFA approval requests, hoping the user taps 'approve' out of frustration","A technical failure in the MFA system","A method to reset forgotten passwords"], correct:1},
-  {q:"You receive ten unexpected 'Approve sign-in?' push notifications in a row. What should you do?", options:["Approve one to make them stop","Deny all of them and report it to IT Security immediately","Turn off your phone and ignore it","Wait until morning to check"], correct:1},
-  {q:"What does data classification (public, internal, confidential, restricted) help determine?", options:["Which font to use in documents","How information may be stored, shared and disposed of","Employee salary bands","Which meetings to attend"], correct:1},
-  {q:"An employee copies a customer database to a personal USB drive to work on over the weekend. This is:", options:["Acceptable if done with good intentions","A violation of data handling policy that creates unencrypted exposure risk","Required for remote work","Only a problem if the drive is lost"], correct:1},
-  {q:"What should you do with sensitive physical documents that are no longer needed?", options:["Place them in the regular trash bin","Dispose of them via secure shredding","Leave them on your desk for recycling later","Give them to a colleague to reuse the paper"], correct:1},
-  {q:"What does ransomware typically do once it infects a system?", options:["Improves system performance","Encrypts files and demands payment for a decryption key","Automatically backs up your files","Only affects browser history"], correct:1},
-  {q:"Why is paying a ransomware demand discouraged?", options:["It's illegal in every country","It does not guarantee recovery and funds further attacks","Payment is always instantly refunded","It automatically alerts law enforcement"], correct:1},
-  {q:"What is the 3-2-1 backup principle?", options:["3 passwords, 2 devices, 1 login","3 copies of data, on 2 different media, with 1 copy stored offline or offsite","3 employees must approve every backup","3 minutes between each backup cycle"], correct:1}
+  {q:"What is the key difference between phishing and spear phishing?", options:["Phishing only happens by phone","Spear phishing is a personalized attack referencing details specific to you or your organization","Phishing is always safe to click","Spear phishing only targets executives"], correct:1, explanation:"Spear phishing is a personalized version of phishing that references real details about you or your organization to appear more convincing."},
+  {q:"Before clicking a link in an email, what is the safest first step?", options:["Click it quickly before it expires","Hover over it to preview the actual destination URL","Forward it to a coworker to test first","Reply asking if it's safe"], correct:1, explanation:"Hovering over a link reveals its actual destination URL, letting you spot a suspicious or mismatched domain before ever clicking."},
+  {q:"An email creates urgency, saying your account will be suspended in 24 hours unless you click a link. This is most likely:", options:["A standard IT reminder","A phishing pressure tactic","Always a legitimate security notice","Something you should ignore without reporting"], correct:1, explanation:"Manufactured urgency, like a 24-hour deadline, is a classic phishing pressure tactic designed to make you act before thinking carefully."},
+  {q:"You receive an unexpected text saying a package couldn't be delivered, with a shortened link to 'update your address'. What should you do?", options:["Tap the link since it seems harmless","Reply with your address to be safe","Avoid the link and verify through the official delivery app or number directly","Forward it to friends to warn them"], correct:2, explanation:"Since you weren't expecting a delivery, the safest move is to avoid the link and verify directly through the official app or number, not the text itself."},
+  {q:"Why are shortened links (like bit.ly) risky in unexpected texts?", options:["They load slower than normal links","They hide the real destination, making it hard to verify safety before clicking","They are always fraudulent","They only work on certain phones"], correct:1, explanation:"Shortened links hide their real destination, making it much harder to spot a malicious site before clicking — exactly why attackers favor them."},
+  {q:"A caller claiming to be from IT asks you to read out the one-time passcode just sent to your phone. What should you do?", options:["Read it out since it's IT","Hang up — legitimate IT never needs your OTP or password","Text it instead of saying it aloud","Provide half the code only"], correct:1, explanation:"No legitimate IT support ever needs your one-time passcode — reading it aloud hands account access straight to the attacker."},
+  {q:"Why can't you always trust caller ID during a suspicious phone call?", options:["Caller ID is always accurate","Caller ID can be spoofed to display a trusted number","Only mobile phones can show caller ID","Landlines cannot be spoofed"], correct:1, explanation:"Caller ID can be spoofed to display any number the attacker chooses, including ones that look like your own IT department or bank."},
+  {q:"What makes QR phishing (quishing) particularly deceptive?", options:["QR codes always contain malware","The destination link isn't visible until after scanning, unlike a normal link","QR codes cannot be scanned by phones","QR codes are illegal to use"], correct:1, explanation:"A QR code hides its destination until after scanning, unlike a normal link where the URL can be previewed first."},
+  {q:"You receive an email asking you to scan a QR code to 'complete benefits enrollment.' What is the safest action?", options:["Scan it immediately since it's from HR","Preview the destination after scanning, or better, navigate to the HR site directly instead","Forward the QR code to a personal email","Ignore email security entirely for HR requests"], correct:1, explanation:"The safest action is to preview the destination after scanning, or better, navigate to the HR site directly yourself rather than trusting the QR code blindly."},
+  {q:"What is a defining feature of Business Email Compromise (BEC)?", options:["It always contains a virus attachment","It is a highly targeted attack using a convincing, urgent request, often impersonating an executive, with no malware involved","It only targets personal Gmail accounts","It is always easy to detect due to spelling errors"], correct:1, explanation:"BEC attacks are highly targeted, use urgent convincing language often impersonating an executive, and typically involve no malware — making them harder to catch with technical filters alone."},
+  {q:"Finance receives an urgent email 'from the CFO' asking for a wire transfer to a new vendor account, marked confidential. What should happen next?", options:["Process it immediately since it's urgent and confidential","Verify by calling the CFO directly using a known number before acting","Reply to the email asking for confirmation","Ask a junior colleague to approve it instead"], correct:1, explanation:"Any urgent, confidential wire transfer request should be verified by phone using a known number, never by replying to the email itself."},
+  {q:"What should be verified before changing any vendor's payment or bank details?", options:["Nothing, email instructions are sufficient","The request should be confirmed by phone using an independently sourced, known number","Only the email signature needs to match","Just confirm the amount is under a certain limit"], correct:1, explanation:"Changes to vendor payment or bank details must be confirmed by phone using an independently sourced, known number — email alone is never sufficient."},
+  {q:"What is 'tailgating' in the context of social engineering?", options:["Sending too many phishing emails at once","Following an authorized employee through a secure door without badging in independently","A type of ransomware","A password cracking technique"], correct:1, explanation:"Tailgating means following an authorized employee through a secure door without badging in yourself, exploiting politeness rather than any technical flaw."},
+  {q:"Which of these best describes 'pretexting'?", options:["Sending a text message before a call","Building a false but plausible backstory over time to earn trust and extract information","A type of QR code attack","Automatically blocking suspicious emails"], correct:1, explanation:"Pretexting involves building a false but plausible backstory over time to earn trust before extracting sensitive information."},
+  {q:"What advantage do passkeys have over traditional passwords?", options:["They are shorter and easier to guess","There is no shared secret to steal or phish, since they're tied to your device","They never need to be set up","They work without any device at all"], correct:1, explanation:"Passkeys are tied to your physical device, so there's no shared secret like a password that can be stolen or phished."},
+  {q:"What is the risk of reusing the same password across personal and work accounts?", options:["There is no risk if the password is strong","If one account is breached, attackers can try the same password elsewhere (credential stuffing)","It slows down login times","It is required by most security policies"], correct:1, explanation:"Reusing a password means that if it's exposed in one breach, attackers can immediately try it elsewhere — a technique called credential stuffing."},
+  {q:"What is the recommended way to store and manage passwords?", options:["Write them on a sticky note near your desk","Use a company-approved password manager","Reuse one strong password everywhere","Share them with a trusted coworker as backup"], correct:1, explanation:"A company-approved password manager securely stores unique, complex passwords for every account, removing the temptation to reuse or write them down."},
+  {q:"What is MFA fatigue (push bombing)?", options:["A user forgetting their MFA device","An attacker repeatedly sending MFA approval requests, hoping the user taps 'approve' out of frustration","A technical failure in the MFA system","A method to reset forgotten passwords"], correct:1, explanation:"MFA fatigue relies on the attacker already having your password and hoping repeated approval requests wear you down into tapping approve out of frustration."},
+  {q:"You receive ten unexpected 'Approve sign-in?' push notifications in a row. What should you do?", options:["Approve one to make them stop","Deny all of them and report it to IT Security immediately","Turn off your phone and ignore it","Wait until morning to check"], correct:1, explanation:"A flood of unexpected approval requests signals your password may already be compromised — deny every one and report it immediately rather than approving to make them stop."},
+  {q:"What does data classification (public, internal, confidential, restricted) help determine?", options:["Which font to use in documents","How information may be stored, shared and disposed of","Employee salary bands","Which meetings to attend"], correct:1, explanation:"Data classification determines exactly how information may be stored, shared and eventually disposed of, based on its sensitivity."},
+  {q:"An employee copies a customer database to a personal USB drive to work on over the weekend. This is:", options:["Acceptable if done with good intentions","A violation of data handling policy that creates unencrypted exposure risk","Required for remote work","Only a problem if the drive is lost"], correct:1, explanation:"Copying company data to a personal USB drive creates an unencrypted, untracked exposure risk — good intentions don't reduce that if the drive is lost."},
+  {q:"What should you do with sensitive physical documents that are no longer needed?", options:["Place them in the regular trash bin","Dispose of them via secure shredding","Leave them on your desk for recycling later","Give them to a colleague to reuse the paper"], correct:1, explanation:"Sensitive physical documents should always go through secure shredding, not the regular trash, where they could be recovered by anyone."},
+  {q:"What does ransomware typically do once it infects a system?", options:["Improves system performance","Encrypts files and demands payment for a decryption key","Automatically backs up your files","Only affects browser history"], correct:1, explanation:"Ransomware encrypts your files and demands payment for the decryption key, effectively holding your data hostage."},
+  {q:"Why is paying a ransomware demand discouraged?", options:["It's illegal in every country","It does not guarantee recovery and funds further attacks","Payment is always instantly refunded","It automatically alerts law enforcement"], correct:1, explanation:"Paying a ransom doesn't guarantee recovery of your files, and it directly funds the attacker to continue targeting others."},
+  {q:"What is the 3-2-1 backup principle?", options:["3 passwords, 2 devices, 1 login","3 copies of data, on 2 different media, with 1 copy stored offline or offsite","3 employees must approve every backup","3 minutes between each backup cycle"], correct:1, explanation:"The 3-2-1 rule means 3 copies of data, on 2 different media, with at least 1 stored offline or offsite, so a single ransomware infection can't wipe out every copy at once."}
 ];
 
 /* ============================= EMPLOYEE ID PREFIX CONFIG ============================= */
@@ -1075,16 +1075,18 @@ function renderQuiz(){
   var wrap = document.getElementById('module-wrap');
   var qHtml = quiz.map(function(item, idx){
     var optsHtml = item.options.map(function(opt, oi){
-      return '<label><input type="radio" name="q'+idx+'" value="'+oi+'" onchange="setAnswer('+idx+','+oi+')"> '+opt+'</label>';
+      return '<label id="q'+idx+'-opt'+oi+'-label"><input type="radio" name="q'+idx+'" value="'+oi+'" onchange="setAnswer('+idx+','+oi+')"> '+opt+'</label>';
     }).join('');
-    return '<div class="quiz-q"><div class="q-num">Question '+(idx+1)+' of '+quiz.length+'</div>'+
+    return '<div class="quiz-q" id="quiz-q-'+idx+'"><div class="q-num">Question '+(idx+1)+' of '+quiz.length+'</div>'+
       '<div class="q-text">'+(item.questionText || item.q)+'</div>'+
-      '<div class="q-options">'+optsHtml+'</div></div>';
+      '<div class="q-options">'+optsHtml+'</div>'+
+      '<div class="q-feedback" id="q'+idx+'-feedback"></div>'+
+      '</div>';
   }).join('');
 
   wrap.innerHTML =
     '<div class="module-heading"><h1>'+getModuleTitle()+' — Assessment</h1></div>'+
-    '<div class="quiz-intro"><h2>Final assessment</h2><p>Answer all '+quiz.length+' questions below, then select Submit assessment. You need at least '+getPassMark()+' correct answers out of '+quiz.length+' to pass and receive your certificate.</p></div>'+
+    '<div class="quiz-intro"><h2>Final assessment</h2><p>Answer all '+quiz.length+' questions below — you\'ll see right away whether each answer is correct. Once you pick an answer it locks in, so choose carefully. You need at least '+getPassMark()+' correct answers out of '+quiz.length+' to pass and receive your certificate.</p></div>'+
     qHtml+
     '<div class="quiz-warn" id="quiz-warn"></div>'+
     '<div class="quiz-submit-bar"><button class="btn btn-primary" onclick="submitQuiz()">Submit assessment</button></div>'+
@@ -1092,7 +1094,36 @@ function renderQuiz(){
 }
 
 function setAnswer(qIdx, optIdx){
+  if(quizAnswers[qIdx] !== undefined) return; // already locked in, ignore further changes
   quizAnswers[qIdx] = optIdx;
+
+  var quiz = getQuiz();
+  var item = quiz[qIdx];
+  var correctAns = (item.correctIndex !== undefined) ? item.correctIndex : item.correct;
+  var isCorrect = optIdx === correctAns;
+
+  // Lock the whole question: disable every radio button for it
+  var questionEl = document.getElementById('quiz-q-'+qIdx);
+  var radios = questionEl.querySelectorAll('input[type="radio"]');
+  radios.forEach(function(r){ r.disabled = true; });
+
+  // Highlight the selected option, and the correct one if the selection was wrong
+  var selectedLabel = document.getElementById('q'+qIdx+'-opt'+optIdx+'-label');
+  selectedLabel.classList.add(isCorrect ? 'q-opt-correct' : 'q-opt-wrong');
+  if(!isCorrect){
+    var correctLabel = document.getElementById('q'+qIdx+'-opt'+correctAns+'-label');
+    correctLabel.classList.add('q-opt-correct');
+  }
+
+  var feedbackEl = document.getElementById('q'+qIdx+'-feedback');
+  var explanation = item.explanation || '';
+  if(isCorrect){
+    feedbackEl.className = 'q-feedback q-feedback-correct';
+    feedbackEl.innerHTML = '<b>✅ Correct!</b>' + (explanation ? ' ' + explanation : '');
+  } else {
+    feedbackEl.className = 'q-feedback q-feedback-wrong';
+    feedbackEl.innerHTML = '<b>❌ Not quite.</b> The correct answer is: <b>"'+item.options[correctAns]+'"</b>.' + (explanation ? ' ' + explanation : '');
+  }
 }
 
 function submitQuiz(){
@@ -1824,7 +1855,7 @@ function showQuestionForm(moduleId, questionId){
   if(questionId && currentEditingModuleData){
     existing = currentEditingModuleData.questions.filter(function(q){ return q.id === questionId; })[0];
   }
-  var q = existing || { questionText:'', options:['','','',''], correctIndex:0, order: (currentEditingModuleData ? currentEditingModuleData.questions.length+1 : 1) };
+  var q = existing || { questionText:'', options:['','','',''], correctIndex:0, explanation:'', order: (currentEditingModuleData ? currentEditingModuleData.questions.length+1 : 1) };
 
   var optionRows = [0,1,2,3].map(function(i){
     return '<div class="cms-form-row" style="align-items:center;">'+
@@ -1843,6 +1874,8 @@ function showQuestionForm(moduleId, questionId){
       '<textarea id="qf-text" rows="2" placeholder="Type the question here...">'+escapeHtml(q.questionText)+'</textarea>'+
       '<label>Options (select the radio button next to the correct one)</label>'+
       optionRows+
+      '<label>Explanation (shown to the employee right after they answer, whether correct or wrong)</label>'+
+      '<textarea id="qf-explanation" rows="2" placeholder="Briefly explain why the correct answer is correct...">'+escapeHtml(q.explanation || '')+'</textarea>'+
       '<div class="modal-error" id="question-form-error"></div>'+
       '<div class="cms-form-actions">'+
         '<button class="btn btn-primary" onclick="saveQuestionForm(\''+moduleId+'\', '+(questionId ? "'"+questionId+"'" : 'null')+')">'+(questionId ? 'Save Changes' : 'Add Question')+'</button>'+
@@ -1857,6 +1890,7 @@ function saveQuestionForm(moduleId, questionId){
   var questionText = document.getElementById('qf-text').value.trim();
   var order = Number(document.getElementById('qf-order').value) || 1;
   var options = [0,1,2,3].map(function(i){ return document.getElementById('qf-opt'+i).value.trim(); });
+  var explanation = document.getElementById('qf-explanation').value.trim();
   var correctRadio = document.querySelector('input[name="qf-correct"]:checked');
   var errEl = document.getElementById('question-form-error');
 
@@ -1872,8 +1906,8 @@ function saveQuestionForm(moduleId, questionId){
   var correctIndex = Number(correctRadio.value);
 
   var payload = questionId
-    ? { action:'update_question', id:questionId, order:order, questionText:questionText, options:options, correctIndex:correctIndex }
-    : { action:'create_question', moduleId:moduleId, order:order, questionText:questionText, options:options, correctIndex:correctIndex };
+    ? { action:'update_question', id:questionId, order:order, questionText:questionText, options:options, correctIndex:correctIndex, explanation:explanation }
+    : { action:'create_question', moduleId:moduleId, order:order, questionText:questionText, options:options, correctIndex:correctIndex, explanation:explanation };
 
   postToBackend(payload).then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
 }
