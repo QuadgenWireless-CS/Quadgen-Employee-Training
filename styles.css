@@ -183,6 +183,22 @@
     94%{opacity:1;}
     100%{left:101%;opacity:0;}
   }
+  .header-scope-icons{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    display:flex;gap:12px;z-index:1;pointer-events:none;
+  }
+  .hsi-badge{
+    display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);
+    border:1px solid rgba(143,211,244,.18);padding:6px 12px;border-radius:20px;
+    animation:hsiTwinkle 3.2s ease-in-out infinite;
+  }
+  .hsi-icon{font-size:15px;filter:drop-shadow(0 0 5px rgba(143,211,244,.7));}
+  .hsi-label{
+    font-family:'Space Grotesk',var(--font);font-size:10px;font-weight:600;letter-spacing:.5px;
+    text-transform:uppercase;color:var(--blue-mid);white-space:nowrap;
+  }
+  @keyframes hsiTwinkle{0%,100%{opacity:.5;transform:translateY(0);}50%{opacity:1;transform:translateY(-3px);}}
+  @media (max-width:1080px){.header-scope-icons{display:none;}}
   @keyframes hnBars{0%,100%{opacity:.3;}50%{opacity:1;}}
   .app-header .brand-mini span{color:inherit;}
   .app-header .right{display:flex;align-items:center;gap:16px;font-size:13.5px;position:relative;z-index:2;}
