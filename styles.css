@@ -48,16 +48,28 @@
     padding:40px 20px;
   }
   .login-card{
-    background:#fff;border-radius:20px;box-shadow:0 25px 60px rgba(0,0,0,.35);
+    background:#fff;border-radius:20px;box-shadow:0 30px 70px rgba(0,0,0,.4), 0 0 0 1px rgba(143,211,244,.15);
     width:100%;max-width:440px;padding:44px 40px 36px;text-align:center;
-    position:relative;overflow:hidden;
+    position:relative;overflow:hidden;z-index:1;
+    animation: qgCardIn .65s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes qgCardIn{
+    from{opacity:0;transform:translateY(22px) scale(.97);}
+    to{opacity:1;transform:translateY(0) scale(1);}
   }
   .login-card::before{
     content:"";position:absolute;top:0;left:0;right:0;height:8px;
     background:linear-gradient(90deg,var(--navy),var(--blue),var(--blue-mid),var(--navy));
+    background-size:200% 100%;animation:qgShimmer 6s linear infinite;
   }
-  .logo-wrap{display:flex;justify-content:center;margin-bottom:18px;}
-  .logo-wrap img{width:170px;height:170px;filter:drop-shadow(0 6px 14px rgba(47,159,224,.35));}
+  @keyframes qgShimmer{0%{background-position:0% 0;}100%{background-position:200% 0;}}
+  .logo-wrap{display:flex;justify-content:center;margin-bottom:18px;position:relative;}
+  .logo-wrap::before{
+    content:"";position:absolute;width:140px;height:140px;border-radius:50%;
+    background:radial-gradient(circle, rgba(47,159,224,.28) 0%, transparent 70%);
+    top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;
+  }
+  .logo-wrap img{width:170px;height:170px;filter:drop-shadow(0 6px 14px rgba(47,159,224,.35));position:relative;z-index:1;}
   .portal-title{font-size:15px;color:var(--muted);margin-bottom:26px;line-height:1.5;}
   .field{text-align:left;margin-bottom:16px;}
   .field label{display:block;font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase;}
@@ -84,10 +96,29 @@
   #screen-welcome{
     min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
     background:radial-gradient(circle at 50% -10%, #163a63 0%, var(--navy-deep) 55%, #050d1a 100%);
-    padding:40px 20px;
+    padding:40px 20px;position:relative;overflow:hidden;
   }
+  #screen-welcome::before, #screen-welcome::after{
+    content:"";position:absolute;border-radius:50%;filter:blur(70px);opacity:.4;pointer-events:none;
+  }
+  #screen-welcome::before{
+    width:440px;height:440px;background:radial-gradient(circle, var(--blue) 0%, transparent 70%);
+    top:-140px;left:-120px;animation:qgFloatOrb1 10s ease-in-out infinite;
+  }
+  #screen-welcome::after{
+    width:380px;height:380px;background:radial-gradient(circle, var(--blue-mid) 0%, transparent 70%);
+    bottom:-160px;right:-100px;animation:qgFloatOrb2 12s ease-in-out infinite;
+  }
+  @keyframes qgFloatOrb1{0%,100%{transform:translate(0,0);}50%{transform:translate(35px,45px);}}
+  @keyframes qgFloatOrb2{0%,100%{transform:translate(0,0);}50%{transform:translate(-30px,-40px);}}
   .login-error{color:var(--danger);font-size:13px;margin:-6px 0 14px;text-align:left;min-height:16px;}
-  .login-card .btn-primary{width:100%;margin-top:6px;padding:13px;font-size:15.5px;}
+  .login-card .btn-primary{
+    width:100%;margin-top:6px;padding:14px;font-size:15.5px;
+    background:linear-gradient(135deg, var(--blue) 0%, #2688c4 100%);
+    box-shadow:0 10px 24px rgba(47,159,224,.4);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .login-card .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(47,159,224,.5);}
   .login-note{font-size:11.5px;color:var(--muted);margin-top:18px;line-height:1.5;}
 
   /* ---------- HEADER (shared) ---------- */
