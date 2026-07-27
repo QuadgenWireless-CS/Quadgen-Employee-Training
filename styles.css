@@ -213,7 +213,7 @@
   #screen-home{
     min-height:100vh;
     background:
-      linear-gradient(rgba(5,15,30,.86), rgba(5,15,30,.9)),
+      linear-gradient(rgba(5,15,30,.55), rgba(5,15,30,.62)),
       url('images/tech-scope-banner.jpg') center/cover no-repeat fixed;
   }
   #screen-home .wrap{max-width:1000px;margin:0 auto;padding:46px 24px 70px;}
@@ -229,7 +229,7 @@
   .greeting-card h1{margin:0 0 10px;font-size:24px;font-weight:800;}
   .greeting-card h1 span{color:var(--blue-mid);}
   .greeting-card p{margin:0;font-size:14.5px;line-height:1.7;color:#d9e8f7;max-width:720px;}
-  .section-label{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--blue-mid);font-weight:700;margin:0 0 16px;}
+  .section-label{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--blue-mid);font-weight:700;margin:0 0 16px;text-shadow:0 2px 6px rgba(0,0,0,.6);}
   .module-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
   @media(max-width:760px){.module-grid{grid-template-columns:1fr;}}
   .module-card{
