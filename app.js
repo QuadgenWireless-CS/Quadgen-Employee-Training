@@ -1140,7 +1140,7 @@ function submitQuiz(){
   var pass = score >= getPassMark();
   results[currentModuleId] = { done:true, score:score, total:quiz.length, pass:pass };
   reportResultToSheet(score, quiz.length, pass);
-  renderResult(score, quiz.length, pass);
+  renderResult(score, quiz.length, pass, true);
 }
 
 /* ============================= ADMIN REPORTING (Google Sheet) ============================= */
@@ -1172,7 +1172,7 @@ function reportResultToSheet(score, total, pass){
 }
 
 /* ============================= RESULT / CERTIFICATE ============================= */
-function renderResult(score, total, pass){
+function renderResult(score, total, pass, isFreshPass){
   var wrap = document.getElementById('module-wrap');
   var pct = Math.round((score/total)*100);
   var today = new Date();
@@ -1217,6 +1217,48 @@ function renderResult(score, total, pass){
         '<button class="btn btn-outline" onclick="showScreen(\'home\')">Back to home</button>'+
       '</div>'+
     '</div>';
+
+  if(isFreshPass){
+    showCelebration(getModuleTitle());
+  }
+}
+
+/* ============================= CELEBRATION (confetti + congrats, any module) ============================= */
+function showCelebration(moduleTitle){
+  var overlay = document.createElement('div');
+  overlay.className = 'celebration-overlay';
+  overlay.id = 'celebration-overlay';
+  overlay.innerHTML =
+    '<div class="celebration-message">'+
+      '<div class="celebration-emoji">🎉</div>'+
+      '<h2>Congratulations!</h2>'+
+      '<p>You\'ve successfully completed<br><b>'+moduleTitle+'</b></p>'+
+      '<p style="font-size:12.5px;margin-top:14px;color:var(--muted);">Your certificate is ready…</p>'+
+    '</div>';
+  document.body.appendChild(overlay);
+
+  var colors = ['#2f9fe0','#8fd3f4','#f6c453','#1f9d55','#ffffff','#0b2447'];
+  for(var i=0;i<80;i++){
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random()*100 + 'vw';
+    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+    piece.style.animationDelay = (Math.random()*0.6) + 's';
+    piece.style.animationDuration = (2.2 + Math.random()*1.4) + 's';
+    overlay.appendChild(piece);
+  }
+
+  overlay.addEventListener('click', dismissCelebration);
+  setTimeout(dismissCelebration, 3200);
+}
+
+function dismissCelebration(){
+  var overlay = document.getElementById('celebration-overlay');
+  if(!overlay) return;
+  overlay.classList.add('celebration-fade-out');
+  setTimeout(function(){
+    if(overlay.parentNode) overlay.parentNode.removeChild(overlay);
+  }, 400);
 }
 
 function retakeQuiz(){
