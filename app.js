@@ -891,6 +891,10 @@ function renderTopic(){
     dots += '<div class="'+cls+'"></div>';
   }
 
+  var totalSteps = topics.length * 3;
+  var currentStep = (currentTopicIndex * 3) + currentSubSlideIndex + 1;
+  var percentComplete = Math.round((currentStep / totalSteps) * 100);
+
   var keyPoints = t.keyPoints || t.points || [];
   var isLastTopic = currentTopicIndex === topics.length - 1;
   var isLastSlide = currentSubSlideIndex === 2;
@@ -923,7 +927,14 @@ function renderTopic(){
       isDirectVideo = true;
       bodyHtml =
         '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Video</h2>'+
-        '<div class="video-embed-wrap"><video id="topic-direct-video" src="'+t.videoUrl+'" autoplay playsinline controls></video></div>'+
+        '<div class="video-embed-wrap">'+
+          '<video id="topic-direct-video" src="'+t.videoUrl+'" playsinline controls></video>'+
+          '<div class="video-play-overlay" id="video-play-overlay" onclick="playDirectVideoWithSound()">'+
+            '<div class="play-circle">▶</div>'+
+            '<div>Tap to play with sound</div>'+
+          '</div>'+
+          '<button class="video-fullscreen-btn" onclick="fullscreenDirectVideo()">⛶ Fullscreen</button>'+
+        '</div>'+
         '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
     } else if(t.illustration){
       bodyHtml =
@@ -957,15 +968,19 @@ function renderTopic(){
         '</label>'+
       '</div>'
     : '<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin:14px 0;flex-wrap:wrap;">'+
-        '<span id="narration-status" style="font-size:13px;color:var(--muted);">'+(isDirectVideo ? '🎬 Playing video…' : '🔊 Playing narration…')+'</span>'+
+        '<span id="narration-status" style="font-size:13px;color:var(--muted);">'+(isDirectVideo ? '🎬 Tap the video to play' : '🔊 Playing narration…')+'</span>'+
         '<button class="btn-mini" id="pause-narration-btn" onclick="togglePauseNarration()" '+(isDirectVideo?'disabled':'')+'>⏸ Pause</button>'+
         '<button class="btn-mini" id="replay-narration-btn" onclick="replayNarration()" '+(isDirectVideo?'disabled':'')+'>↻ Replay narration</button>'+
       '</div>';
 
   wrap.innerHTML =
     '<div class="module-heading"><h1>'+getModuleTitle()+'</h1></div>'+
+    '<div class="overall-progress">'+
+      '<div class="overall-progress-labels"><span>Overall progress</span><span class="overall-progress-pct">'+percentComplete+'% complete</span></div>'+
+      '<div class="overall-progress-bar"><div class="overall-progress-fill" style="width:'+percentComplete+'%;"></div></div>'+
+    '</div>'+
     '<div class="progress-track">'+dots+'</div>'+
-    '<div class="topic-eyebrow">Topic '+(currentTopicIndex+1)+' of '+topics.length+' &nbsp;·&nbsp; '+slideLabel+'</div>'+
+    '<div class="topic-eyebrow">📍 Topic '+(currentTopicIndex+1)+' of '+topics.length+' &nbsp;·&nbsp; '+slideLabel+'</div>'+
     '<div class="topic-card">'+
       bodyHtml+
     '</div>'+
@@ -981,10 +996,12 @@ function renderTopic(){
   } else {
     var directVideoEl = document.getElementById('topic-direct-video');
     if(directVideoEl){
-      directVideoEl.play().catch(function(err){
-        console.warn('Autoplay was blocked by the browser; the viewer can press play manually.', err);
+      // Playback starts only when the viewer clicks the overlay — this guarantees the browser allows audio
+      // (browsers block audio on auto-triggered playback, but always allow it on a direct click).
+      directVideoEl.addEventListener('play', function(){
+        var statusEl = document.getElementById('narration-status');
+        if(statusEl) statusEl.textContent = '🎬 Playing video…';
       });
-      // Sequential: let the muted video play through completely first, THEN start the narration.
       directVideoEl.addEventListener('ended', function onEnded(){
         directVideoEl.removeEventListener('ended', onEnded);
         var pauseBtn = document.getElementById('pause-narration-btn');
@@ -997,6 +1014,24 @@ function renderTopic(){
       narrateCurrentSlide(narrationText);
     }
   }
+}
+
+function playDirectVideoWithSound(){
+  var videoEl = document.getElementById('topic-direct-video');
+  var overlay = document.getElementById('video-play-overlay');
+  if(!videoEl) return;
+  videoEl.play().then(function(){
+    if(overlay) overlay.style.display = 'none';
+  }).catch(function(err){
+    console.warn('Could not start video playback.', err);
+  });
+}
+
+function fullscreenDirectVideo(){
+  var videoEl = document.getElementById('topic-direct-video');
+  if(!videoEl) return;
+  var req = videoEl.requestFullscreen || videoEl.webkitRequestFullscreen || videoEl.msRequestFullscreen;
+  if(req) req.call(videoEl);
 }
 
 function onVideoWatchedToggle(){
