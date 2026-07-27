@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuadGen Wireless Solutions | Awareness Training Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,7 +15,10 @@
 <div id="screen-welcome">
   <div class="login-card" style="position:relative;">
     <span onclick="startLogin('admin')" title="" style="position:absolute;top:14px;right:18px;font-size:15px;opacity:.35;cursor:pointer;user-select:none;">🔒</span>
-    <div class="logo-wrap"><img src="logo.png" alt="QuadGen Wireless Solutions logo"></div>
+    <div class="logo-wrap">
+      <span class="radar-ring"></span><span class="radar-ring"></span><span class="radar-ring"></span>
+      <img src="logo.png" alt="QuadGen Wireless Solutions logo">
+    </div>
     <p class="portal-title">Employee Awareness Training Portal</p>
     <button class="btn btn-primary" style="width:100%;" onclick="startLogin('employee')">Let's get started</button>
   </div>
