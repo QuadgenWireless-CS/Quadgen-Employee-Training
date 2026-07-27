@@ -14,6 +14,7 @@
 <!-- ===================== WELCOME / ROLE SELECT SCREEN ===================== -->
 <div id="screen-welcome">
   <svg id="network-mesh" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"
+       xmlns:xlink="http://www.w3.org/1999/xlink"
        style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;">
     <g class="tower" stroke="#8fd3f4" stroke-width="1.5" fill="none" opacity=".4">
       <path d="M90,560 L130,120 L170,560"/>
@@ -52,24 +53,24 @@
       <use href="#sig1"/><use href="#sig2"/><use href="#sig3"/>
     </g>
 
-    <circle class="mesh-pulse" r="3.5"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0s"><mpath href="#sig1"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="3.5"><animateMotion dur="2.6s" repeatCount="indefinite" begin=".9s"><mpath href="#sig2"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="3.5"><animateMotion dur="2.6s" repeatCount="indefinite" begin="1.8s"><mpath href="#sig3"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="3" ><animateMotion dur="3.1s" repeatCount="indefinite" begin="1.3s"><mpath href="#sig1"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="3" ><animateMotion dur="3.1s" repeatCount="indefinite" begin="2.2s"><mpath href="#sig2"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3.5"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0s"><mpath href="#sig1" xlink:href="#sig1"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3.5"><animateMotion dur="2.6s" repeatCount="indefinite" begin=".9s"><mpath href="#sig2" xlink:href="#sig2"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3.5"><animateMotion dur="2.6s" repeatCount="indefinite" begin="1.8s"><mpath href="#sig3" xlink:href="#sig3"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3" ><animateMotion dur="3.1s" repeatCount="indefinite" begin="1.3s"><mpath href="#sig1" xlink:href="#sig1"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3" ><animateMotion dur="3.1s" repeatCount="indefinite" begin="2.2s"><mpath href="#sig2" xlink:href="#sig2"/></animateMotion></circle>
 
-    <circle class="mesh-pulse" r="2.5"><animateMotion dur=".8s"  repeatCount="indefinite" begin="0s"   ><mpath href="#x1"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="3"  ><animateMotion dur="1.4s" repeatCount="indefinite" begin=".3s" ><mpath href="#x2"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="2"  ><animateMotion dur=".6s"  repeatCount="indefinite" begin=".6s" ><mpath href="#x3"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="3.5"><animateMotion dur="2.2s" repeatCount="indefinite" begin="0s"   ><mpath href="#x4"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="2.5"><animateMotion dur="1s"   repeatCount="indefinite" begin="1.1s"><mpath href="#x5"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="3"  ><animateMotion dur="1.7s" repeatCount="indefinite" begin=".2s" ><mpath href="#x6"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="2"  ><animateMotion dur=".9s"  repeatCount="indefinite" begin="1.4s"><mpath href="#x7"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="3"  ><animateMotion dur="2.6s" repeatCount="indefinite" begin=".5s" ><mpath href="#x8"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="2.5"><animateMotion dur="1.3s" repeatCount="indefinite" begin="1.8s"><mpath href="#x1"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="2"  ><animateMotion dur=".7s"  repeatCount="indefinite" begin="2.1s"><mpath href="#x4"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="3"  ><animateMotion dur="1.9s" repeatCount="indefinite" begin=".9s" ><mpath href="#x6"/></animateMotion></circle>
-    <circle class="mesh-pulse" r="2.5"><animateMotion dur="1.1s" repeatCount="indefinite" begin="1.6s"><mpath href="#x2"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2.5"><animateMotion dur=".8s"  repeatCount="indefinite" begin="0s"   ><mpath href="#x1" xlink:href="#x1"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3"  ><animateMotion dur="1.4s" repeatCount="indefinite" begin=".3s" ><mpath href="#x2" xlink:href="#x2"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2"  ><animateMotion dur=".6s"  repeatCount="indefinite" begin=".6s" ><mpath href="#x3" xlink:href="#x3"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3.5"><animateMotion dur="2.2s" repeatCount="indefinite" begin="0s"   ><mpath href="#x4" xlink:href="#x4"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2.5"><animateMotion dur="1s"   repeatCount="indefinite" begin="1.1s"><mpath href="#x5" xlink:href="#x5"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3"  ><animateMotion dur="1.7s" repeatCount="indefinite" begin=".2s" ><mpath href="#x6" xlink:href="#x6"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2"  ><animateMotion dur=".9s"  repeatCount="indefinite" begin="1.4s"><mpath href="#x7" xlink:href="#x7"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3"  ><animateMotion dur="2.6s" repeatCount="indefinite" begin=".5s" ><mpath href="#x8" xlink:href="#x8"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2.5"><animateMotion dur="1.3s" repeatCount="indefinite" begin="1.8s"><mpath href="#x1" xlink:href="#x1"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2"  ><animateMotion dur=".7s"  repeatCount="indefinite" begin="2.1s"><mpath href="#x4" xlink:href="#x4"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="3"  ><animateMotion dur="1.9s" repeatCount="indefinite" begin=".9s" ><mpath href="#x6" xlink:href="#x6"/></animateMotion></circle>
+    <circle class="mesh-pulse" r="2.5"><animateMotion dur="1.1s" repeatCount="indefinite" begin="1.6s"><mpath href="#x2" xlink:href="#x2"/></animateMotion></circle>
 
     <g class="twinkle-dots" fill="#8fd3f4">
       <circle cx="230" cy="140" r="2" style="animation-delay:0s;animation-duration:4.6s;"/>
