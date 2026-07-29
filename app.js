@@ -191,7 +191,7 @@ var seedComplianceTopics = [
         "<text x='350' y='292' font-size='14' text-anchor='middle' fill='var(--success)' font-weight='800'>Reported to Ethics Desk \u2713</text>"+
       "</g>"+
       "</svg>",
-    videoUrl:"videos/Real_world_example_An_employee.mp4"
+    videoUrl:"videos/compliance/Real_world_example_An_employee.mp4"
   },
   {
     icon:"🚫",
@@ -206,7 +206,7 @@ var seedComplianceTopics = [
     ],
     example:"A manager repeatedly comments on a team member's appearance despite being asked to stop. This is harassment regardless of the manager's seniority, and the employee has the right to file a confidential complaint with the IC without fear of career consequences.",
     illustration: buildStoryIllustration({caption:'Watch the sequence: Unwelcome Comment → Stop It → Report to IC',leftEmoji:'😟',leftLabel:'Colleague',rightEmoji:'🧑\u200d💼',rightLabel:'Manager',centerEmoji:'💬',verdictEmoji:'🚫',resultText:'Reported to Internal Committee ✓'}),
-    videoUrl:"videos/Posh.mp4"
+    videoUrl:"videos/compliance/Posh.mp4"
   },
   {
     icon:"🤝",
@@ -221,7 +221,7 @@ var seedComplianceTopics = [
     ],
     example:"Two candidates apply for the same role with equal qualifications. Rejecting one because of assumptions about their age or family status, rather than documented job-related criteria, is unlawful discrimination.",
     illustration: buildStoryIllustration({caption:'Watch the sequence: Equal Candidates → Reject Bias → Decide on Merit',leftEmoji:'🧑',leftLabel:'Candidate A',rightEmoji:'🧑\u200d🦱',rightLabel:'Candidate B',centerEmoji:'📋',verdictEmoji:'🚫',resultText:'Merit-Based Decision ✓'}),
-    videoUrl:"videos/Anti-Discrimination%20&%20Equal%20Opportunity.mp4"
+    videoUrl:"videos/compliance/Anti-Discrimination%20&%20Equal%20Opportunity.mp4"
   },
   {
     icon:"🌍",
@@ -236,7 +236,7 @@ var seedComplianceTopics = [
     ],
     example:"During a brainstorm, one team member's idea is initially ignored, then praised minutes later when repeated by someone else. A good ally notices this pattern and redirects credit — small daily behaviors like this are what build (or erode) an inclusive culture.",
     illustration: buildStoryIllustration({caption:'Watch the sequence: Idea Shared → Credit Redirected → Everyone Heard',leftEmoji:'🙋\u200d♀️',leftLabel:'Team Member',rightEmoji:'🙋',rightLabel:'Colleague',centerEmoji:'💡',verdictEmoji:'🔄',resultText:'Credit Given Correctly ✓'}),
-    videoUrl:"videos/Diversity.mp4"
+    videoUrl:"videos/compliance/Diversity.mp4"
   },
   {
     icon:"🧭",
@@ -251,7 +251,7 @@ var seedComplianceTopics = [
     ],
     example:"During a heated project review, a senior employee raises their voice and mocks a junior colleague's mistake in front of the whole team. Even if the technical criticism is valid, the delivery is a professional conduct violation and should be reported.",
     illustration: buildStoryIllustration({caption:'Watch the sequence: Heated Words → Stop & Reset → Respectful Discussion',leftEmoji:'😠',leftLabel:'Senior Employee',rightEmoji:'😟',rightLabel:'Junior Colleague',centerEmoji:'🗯️',verdictEmoji:'🛑',resultText:'Professional Conduct Restored ✓'}),
-    videoUrl:"videos/Ethics_in_Workplace.mp4"
+    videoUrl:"videos/compliance/Ethics_in_Workplace.mp4"
   },
   {
     icon:"📣",
@@ -266,7 +266,7 @@ var seedComplianceTopics = [
     ],
     example:"An employee notices a colleague repeatedly falsifying expense reports and reports it anonymously through the Ethics Hotline. The company is obligated to investigate and to protect the reporting employee's identity throughout the process.",
     illustration: buildStoryIllustration({caption:'Watch the sequence: Spot Fraud → Report Anonymously → Protected by Policy',leftEmoji:'🧑\u200d💼',leftLabel:'Employee',rightEmoji:'🕵️',rightLabel:'Ethics Team',centerEmoji:'🧾',verdictEmoji:'🚩',resultText:'Protected & Investigated ✓'}),
-    videoUrl:"videos/Whistleblowing%20in%20the%20Workplace.mp4"
+    videoUrl:"videos/compliance/Whistleblowing%20in%20the%20Workplace.mp4"
   },
   {
     icon:"🔒",
@@ -281,7 +281,7 @@ var seedComplianceTopics = [
     ],
     example:"An employee discusses an unreleased product feature with a friend at a coffee shop, unaware a competitor's contact is seated nearby. Even casual disclosure of confidential plans can cause real commercial harm.",
     illustration: buildStoryIllustration({caption:'Watch the sequence: Public Conversation → Risk Spotted → Stay Confidential',leftEmoji:'🧑\u200d💼',leftLabel:'Employee',rightEmoji:'🕵️\u200d♂️',rightLabel:'Nearby Listener',centerEmoji:'💬',verdictEmoji:'🚫',resultText:'Confidentiality Maintained ✓'}),
-    videoUrl:"videos/DataPrivacy.mp4"
+    videoUrl:"videos/compliance/DataPrivacy.mp4"
   },
   {
     icon:"🧩",
@@ -296,7 +296,7 @@ var seedComplianceTopics = [
     ],
     example:"A procurement manager's spouse owns a company bidding for a QuadGen vendor contract. The manager must disclose this relationship and step back from the vendor selection process entirely.",
     illustration: buildStoryIllustration({caption:'Watch the sequence: Family Connection → Disclose It → Recuse & Stay Ethical',leftEmoji:'🧑\u200d🤝\u200d🧑',leftLabel:'Family Member',rightEmoji:'🏢',rightLabel:'Vendor',centerEmoji:'📝',verdictEmoji:'🚩',resultText:'Disclosed & Recused ✓'}),
-    videoUrl:"videos/Conflict%20of%20Interest%20Awareness.mp4"
+    videoUrl:"videos/compliance/Conflict%20of%20Interest%20Awareness.mp4"
   }
 ];
 
@@ -2048,10 +2048,11 @@ function handleVideoFileSelect(inputEl){
   var pathInput = document.getElementById('tf-videourl-upload');
   if(!file){ if(previewEl) previewEl.innerHTML = ''; return; }
 
-  // Auto-fill the expected videos/ path to match this filename, encoding spaces
-  // the same way we do for every manually-uploaded video already in the repo.
+  // Auto-fill the expected path inside this module's own subfolder, so videos never
+  // get mixed up between modules — matches videos/<moduleId>/filename.mp4 convention.
   var safeName = file.name.replace(/ /g, '%20');
-  if(pathInput && !pathInput.value) pathInput.value = 'videos/' + safeName;
+  var moduleFolder = currentEditingModuleId || 'misc';
+  if(pathInput && !pathInput.value) pathInput.value = 'videos/' + moduleFolder + '/' + safeName;
 
   var objectUrl = URL.createObjectURL(file);
   previewEl.innerHTML =
@@ -2105,7 +2106,7 @@ function showTopicForm(moduleId, topicId){
         '<input id="tf-video-file" type="file" accept="video/mp4,video/webm,video/quicktime,video/ogg" onchange="handleVideoFileSelect(this)">'+
         '<div id="video-file-preview" style="margin-top:10px;"></div>'+
         '<label>Path once uploaded to your videos/ folder on GitHub</label>'+
-        '<input id="tf-videourl-upload" type="text" value="'+escapeAttr(uploadVal)+'" placeholder="videos/my-clip.mp4">'+
+        '<input id="tf-videourl-upload" type="text" value="'+escapeAttr(uploadVal)+'" placeholder="videos/'+(currentEditingModuleId||'modulename')+'/my-clip.mp4">'+
         '<p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5;">Choosing a file here previews it in your browser and checks its length — it does not upload it anywhere by itself. You still need to add this exact file to the <code>videos/</code> folder in your GitHub repo (same as your other videos); the path above is filled in automatically to match.</p>'+
       '</div>'+
       '<label>Narration audio — Overview slide (optional — path/URL to a pre-recorded audio file; guarantees the exact same voice on every device, unlike browser narration)</label>'+
