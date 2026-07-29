@@ -860,6 +860,10 @@ function getPassMark(){
 }
 
 var currentSubSlideIndex = 0; // 0 = overview, 1 = pictorial example, 2 = key points
+
+/* TEMPORARY (testing only): set to true once the project is fully ready to re-enable
+   the "must wait for narration/video to finish before Next unlocks" restriction. */
+var ENFORCE_NARRATION_GATING = false;
 var currentNarrationText = '';
 var isNarrationPaused = false;
 
@@ -900,7 +904,7 @@ function narrateCurrentSlide(text){
   }
 
   window.speechSynthesis.cancel();
-  if(nextBtn) nextBtn.disabled = true;
+  if(nextBtn && ENFORCE_NARRATION_GATING) nextBtn.disabled = true;
   if(pauseBtn){ pauseBtn.disabled = false; pauseBtn.textContent = '⏸ Pause'; }
   if(statusEl) statusEl.textContent = '🔊 Playing narration…';
 
@@ -1079,7 +1083,7 @@ function renderTopic(){
     footerHtml+
     '<div class="topic-nav">'+
       '<button class="btn btn-ghost" onclick="goPrevSlide()" '+(isVeryFirstSlide?'disabled':'')+'>&larr; Previous</button>'+
-      '<button class="btn btn-primary" id="slide-next-btn" disabled onclick="'+nextAction+'">'+nextLabel+'</button>'+
+      '<button class="btn btn-primary" id="slide-next-btn" '+(ENFORCE_NARRATION_GATING?'disabled':'')+' onclick="'+nextAction+'">'+nextLabel+'</button>'+
     '</div>'+
     '<div style="text-align:center;margin-top:18px;"><button class="btn-ghost btn back-link" style="border:none;" onclick="stopNarration();showScreen(\'home\')">&larr; Back to home</button></div>';
 
@@ -1129,7 +1133,7 @@ function fullscreenDirectVideo(){
 function onVideoWatchedToggle(){
   var checkbox = document.getElementById('video-watched-check');
   var nextBtn = document.getElementById('slide-next-btn');
-  if(nextBtn) nextBtn.disabled = !checkbox.checked;
+  if(nextBtn) nextBtn.disabled = ENFORCE_NARRATION_GATING ? !checkbox.checked : false;
 }
 
 function goNextSlide(){
