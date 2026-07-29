@@ -869,7 +869,7 @@ var currentSubSlideIndex = 0; // 0 = overview, 1 = pictorial example, 2 = key po
 
 /* TEMPORARY (testing only): set to true once the project is fully ready to re-enable
    the "must wait for narration/video to finish before Next unlocks" restriction. */
-var ENFORCE_NARRATION_GATING = true;
+var ENFORCE_NARRATION_GATING = false;
 var currentNarrationText = '';
 var isNarrationPaused = false;
 
@@ -1942,7 +1942,7 @@ function showTopicForm(moduleId, topicId){
       '</div>'+
       '<label>Body (main explanation shown to employees)</label>'+
       '<textarea id="tf-body" rows="4" placeholder="The main paragraph explaining this topic...">'+escapeHtml(t.body)+'</textarea>'+
-      '<label>Video (optional — a YouTube URL, or a path/URL to an uploaded .mp4 file; if set, this plays instead of the illustration below)</label>'+
+      '<label>Video (recommended length: 20\u201325 seconds — a YouTube URL, or a path/URL to an uploaded video file; if set, this plays instead of the illustration below, with no text shown underneath it, exactly like the built-in modules)</label>'+
       '<input id="tf-videourl" type="text" value="'+escapeAttr(t.videoUrl || '')+'" placeholder="https://www.youtube.com/watch?v=... or videos/my-clip.mp4">'+
       '<label>Pictorial example (optional — paste SVG code; only used if no video URL is set above)</label>'+
       '<textarea id="tf-illustration" rows="3" placeholder="<svg viewBox=\'0 0 700 300\' ...>...</svg>">'+escapeHtml(t.illustration || '')+'</textarea>'+
