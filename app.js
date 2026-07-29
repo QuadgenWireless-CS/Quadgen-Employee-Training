@@ -1923,6 +1923,46 @@ function renderModuleContentEditor(data){
 
 /* ---------------- Topic form (create + edit) ---------------- */
 
+function setVideoInputMode(mode){
+  var modeInput = document.getElementById('tf-video-mode');
+  if(modeInput) modeInput.value = mode;
+  var youtubeBlock = document.getElementById('video-mode-youtube');
+  var uploadBlock = document.getElementById('video-mode-upload');
+  if(youtubeBlock) youtubeBlock.classList.toggle('hidden', mode !== 'youtube');
+  if(uploadBlock) uploadBlock.classList.toggle('hidden', mode !== 'upload');
+  var youtubeBtn = document.getElementById('vm-btn-youtube');
+  var uploadBtn = document.getElementById('vm-btn-upload');
+  if(youtubeBtn) youtubeBtn.classList.toggle('btn-mini-primary', mode === 'youtube');
+  if(uploadBtn) uploadBtn.classList.toggle('btn-mini-primary', mode === 'upload');
+}
+
+function handleVideoFileSelect(inputEl){
+  var file = inputEl.files && inputEl.files[0];
+  var previewEl = document.getElementById('video-file-preview');
+  var pathInput = document.getElementById('tf-videourl-upload');
+  if(!file){ if(previewEl) previewEl.innerHTML = ''; return; }
+
+  // Auto-fill the expected videos/ path to match this filename, encoding spaces
+  // the same way we do for every manually-uploaded video already in the repo.
+  var safeName = file.name.replace(/ /g, '%20');
+  if(pathInput && !pathInput.value) pathInput.value = 'videos/' + safeName;
+
+  var objectUrl = URL.createObjectURL(file);
+  previewEl.innerHTML =
+    '<video id="video-file-preview-player" src="'+objectUrl+'" controls playsinline style="width:100%;max-width:360px;border-radius:8px;display:block;background:#000;"></video>'+
+    '<p id="video-file-duration" style="font-size:12.5px;color:var(--muted);margin-top:6px;">Checking length…</p>';
+
+  var previewPlayer = document.getElementById('video-file-preview-player');
+  previewPlayer.addEventListener('loadedmetadata', function(){
+    var secs = Math.round(previewPlayer.duration);
+    var durEl = document.getElementById('video-file-duration');
+    if(durEl){
+      var note = (secs < 15 || secs > 35) ? ' — recommended length is 20\u201325 seconds.' : ' — good length!';
+      durEl.textContent = 'Length: ' + secs + 's' + note;
+    }
+  });
+}
+
 function showTopicForm(moduleId, topicId){
   var slot = document.getElementById('topic-form-slot');
   var existing = null;
@@ -1931,6 +1971,10 @@ function showTopicForm(moduleId, topicId){
   }
   var t = existing || { icon:'📌', title:'', body:'', keyPoints:[], example:'', tip:'', illustration:'', videoUrl:'', order: (currentEditingModuleData ? currentEditingModuleData.topics.length+1 : 1) };
   var keyPointsText = (t.keyPoints || []).join('\n');
+  var existingIsYoutube = !!toYouTubeEmbedUrl(t.videoUrl || '');
+  var initialMode = t.videoUrl ? (existingIsYoutube ? 'youtube' : 'upload') : 'youtube';
+  var youtubeVal = existingIsYoutube ? (t.videoUrl || '') : '';
+  var uploadVal = (t.videoUrl && !existingIsYoutube) ? t.videoUrl : '';
 
   slot.innerHTML =
     '<div class="cms-form">'+
@@ -1942,9 +1986,23 @@ function showTopicForm(moduleId, topicId){
       '</div>'+
       '<label>Body (main explanation shown to employees)</label>'+
       '<textarea id="tf-body" rows="4" placeholder="The main paragraph explaining this topic...">'+escapeHtml(t.body)+'</textarea>'+
-      '<label>Video (recommended length: 20\u201325 seconds — a YouTube URL, or a path/URL to an uploaded video file; if set, this plays instead of the illustration below, with no text shown underneath it, exactly like the built-in modules)</label>'+
-      '<input id="tf-videourl" type="text" value="'+escapeAttr(t.videoUrl || '')+'" placeholder="https://www.youtube.com/watch?v=... or videos/my-clip.mp4">'+
-      '<label>Pictorial example (optional — paste SVG code; only used if no video URL is set above)</label>'+
+      '<label>Video (recommended length: 20\u201325 seconds — if set, this plays instead of the illustration below, with no text shown underneath it, exactly like the built-in modules)</label>'+
+      '<input type="hidden" id="tf-video-mode" value="'+initialMode+'">'+
+      '<div class="video-mode-toggle" style="display:flex;gap:8px;margin-bottom:10px;">'+
+        '<button type="button" class="btn-mini'+(initialMode==='youtube'?' btn-mini-primary':'')+'" id="vm-btn-youtube" onclick="setVideoInputMode(\'youtube\')">🔗 YouTube link</button>'+
+        '<button type="button" class="btn-mini'+(initialMode==='upload'?' btn-mini-primary':'')+'" id="vm-btn-upload" onclick="setVideoInputMode(\'upload\')">📁 Upload from device</button>'+
+      '</div>'+
+      '<div id="video-mode-youtube" class="'+(initialMode==='youtube'?'':'hidden')+'">'+
+        '<input id="tf-videourl" type="text" value="'+escapeAttr(youtubeVal)+'" placeholder="https://www.youtube.com/watch?v=...">'+
+      '</div>'+
+      '<div id="video-mode-upload" class="'+(initialMode==='upload'?'':'hidden')+'">'+
+        '<input id="tf-video-file" type="file" accept="video/mp4,video/webm,video/quicktime,video/ogg" onchange="handleVideoFileSelect(this)">'+
+        '<div id="video-file-preview" style="margin-top:10px;"></div>'+
+        '<label>Path once uploaded to your videos/ folder on GitHub</label>'+
+        '<input id="tf-videourl-upload" type="text" value="'+escapeAttr(uploadVal)+'" placeholder="videos/my-clip.mp4">'+
+        '<p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5;">Choosing a file here previews it in your browser and checks its length — it does not upload it anywhere by itself. You still need to add this exact file to the <code>videos/</code> folder in your GitHub repo (same as your other videos); the path above is filled in automatically to match.</p>'+
+      '</div>'+
+      '<label>Pictorial example (optional — paste SVG code; only used if no video is set above)</label>'+
       '<textarea id="tf-illustration" rows="3" placeholder="<svg viewBox=\'0 0 700 300\' ...>...</svg>">'+escapeHtml(t.illustration || '')+'</textarea>'+
       '<label>Real-world example</label>'+
       '<textarea id="tf-example" rows="2" placeholder="A short example illustrating this topic...">'+escapeHtml(t.example)+'</textarea>'+
@@ -1967,7 +2025,10 @@ function saveTopicForm(moduleId, topicId){
   var title = document.getElementById('tf-title').value.trim();
   var order = Number(document.getElementById('tf-order').value) || 1;
   var body = document.getElementById('tf-body').value.trim();
-  var videoUrl = document.getElementById('tf-videourl').value.trim();
+  var videoMode = document.getElementById('tf-video-mode').value;
+  var videoUrl = videoMode === 'upload'
+    ? document.getElementById('tf-videourl-upload').value.trim()
+    : document.getElementById('tf-videourl').value.trim();
   var illustration = document.getElementById('tf-illustration').value.trim();
   var keyPoints = document.getElementById('tf-keypoints').value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
   var example = document.getElementById('tf-example').value.trim();
