@@ -880,10 +880,35 @@ function speechSupported(){
 function pickIndianVoice(){
   if(!speechSupported()) return null;
   var voices = window.speechSynthesis.getVoices() || [];
-  // Prefer an explicit Indian English voice if the browser/OS provides one.
-  // Availability varies by device — this is a best-effort enhancement, not guaranteed.
-  var indianVoice = voices.filter(function(v){ return /en[-_]IN/i.test(v.lang); })[0];
-  return indianVoice || null;
+  if(voices.length === 0) return null;
+
+  // Known female voice names across common platforms (Windows, macOS/iOS, Android, Chrome OS).
+  // The Web Speech API gives no reliable "gender" field, so this is a best-effort name match —
+  // it won't guarantee the exact same voice everywhere, but it noticeably improves consistency.
+  var femaleNameHints = [
+    'female','zira','samantha','victoria','susan','karen','moira','tessa','fiona',
+    'allison','ava','serena','kathy','veena','lekha','heera','neerja','priya',
+    'google uk english female','google us english female','aditi','raveena'
+  ];
+  var isFemaleName = function(name){
+    var n = (name || '').toLowerCase();
+    return femaleNameHints.some(function(hint){ return n.indexOf(hint) !== -1; });
+  };
+
+  // Tier 1: an Indian-English voice that also looks female by name.
+  var indianFemale = voices.filter(function(v){ return /en[-_]IN/i.test(v.lang) && isFemaleName(v.name); })[0];
+  if(indianFemale) return indianFemale;
+
+  // Tier 2: any Indian-English voice, regardless of apparent gender.
+  var indianAny = voices.filter(function(v){ return /en[-_]IN/i.test(v.lang); })[0];
+  if(indianAny) return indianAny;
+
+  // Tier 3: any English voice that looks female by name.
+  var englishFemale = voices.filter(function(v){ return /^en/i.test(v.lang) && isFemaleName(v.name); })[0];
+  if(englishFemale) return englishFemale;
+
+  // Tier 4: give up on matching — let the browser use its own default voice.
+  return null;
 }
 
 // Many browsers (esp. Chrome) return an empty voice list on the very first call
