@@ -206,7 +206,7 @@ var seedComplianceTopics = [
     ],
     example:"A manager repeatedly comments on a team member's appearance despite being asked to stop. This is harassment regardless of the manager's seniority, and the employee has the right to file a confidential complaint with the IC without fear of career consequences.",
     illustration: buildStoryIllustration({caption:'Watch the sequence: Unwelcome Comment → Stop It → Report to IC',leftEmoji:'😟',leftLabel:'Colleague',rightEmoji:'🧑\u200d💼',rightLabel:'Manager',centerEmoji:'💬',verdictEmoji:'🚫',resultText:'Reported to Internal Committee ✓'}),
-    videoUrl:"videos/posh-training.mp4""
+    videoUrl:"videos/posh-training.mp4"
   },
   {
     icon:"🤝",
