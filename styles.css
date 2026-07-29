@@ -15,7 +15,7 @@
     --danger-bg:#fdeceb;
     --radius:14px;
     --shadow:0 10px 30px rgba(11,36,71,0.08);
-    --font:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+    --font:"Poppins","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box;}
   body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);}
@@ -73,17 +73,17 @@
   }
   .logo-wrap img{width:170px;height:170px;filter:drop-shadow(0 6px 14px rgba(47,159,224,.35));position:relative;z-index:1;}
   .portal-headline{
-    font-family:'Space Grotesk',var(--font);font-size:26px;font-weight:700;color:var(--navy);
+    font-family:var(--font);font-size:26px;font-weight:700;color:var(--navy);
     line-height:1.25;margin:4px 0 10px;
   }
   .portal-quote{
-    font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:600;
+    font-family:var(--font);font-style:italic;font-weight:600;
     font-size:17px;color:var(--navy);line-height:1.55;margin:0 0 28px;padding:0 14px;position:relative;
   }
-  .portal-quote::before{content:'"';font-size:34px;color:var(--blue-mid);position:absolute;left:-6px;top:8px;font-family:'Playfair Display',serif;font-style:normal;line-height:0;}
-  .portal-quote::after{content:'"';font-size:34px;color:var(--blue-mid);position:absolute;right:-6px;bottom:-6px;font-family:'Playfair Display',serif;font-style:normal;line-height:0;}
+  .portal-quote::before{content:'"';font-size:34px;color:var(--blue-mid);position:absolute;left:-6px;top:8px;font-family:var(--font);font-style:normal;line-height:0;}
+  .portal-quote::after{content:'"';font-size:34px;color:var(--blue-mid);position:absolute;right:-6px;bottom:-6px;font-family:var(--font);font-style:normal;line-height:0;}
   .portal-title{
-    font-family:'Space Grotesk',var(--font);font-size:12px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+    font-family:var(--font);font-size:12px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
     color:var(--muted);margin-bottom:26px;line-height:1.5;
   }
   .field{text-align:left;margin-bottom:16px;}
@@ -138,7 +138,7 @@
   .login-error{color:var(--danger);font-size:13px;margin:-6px 0 14px;text-align:left;min-height:16px;}
   .login-card .btn-primary{
     width:100%;margin-top:6px;padding:14px;font-size:15.5px;
-    font-family:'Space Grotesk',var(--font);font-weight:600;letter-spacing:.3px;
+    font-family:var(--font);font-weight:600;letter-spacing:.3px;
     background:linear-gradient(135deg, var(--blue) 0%, #2688c4 100%);
     box-shadow:0 10px 24px rgba(47,159,224,.4);
     transition:transform .18s ease, box-shadow .18s ease;
@@ -198,7 +198,7 @@
   }
   .hsi-icon{font-size:15px;filter:drop-shadow(0 0 5px rgba(143,211,244,.7));}
   .hsi-label{
-    font-family:'Space Grotesk',var(--font);font-size:10px;font-weight:600;letter-spacing:.5px;
+    font-family:var(--font);font-size:10px;font-weight:600;letter-spacing:.5px;
     text-transform:uppercase;color:var(--blue-mid);white-space:nowrap;
   }
   @keyframes hsiTwinkle{0%,100%{opacity:.5;transform:translateY(0);}50%{opacity:1;transform:translateY(-3px);}}
@@ -380,9 +380,9 @@
   .cert-org{font-size:19px;font-weight:800;color:var(--navy);margin:0;}
   .cert-org span{color:var(--blue);}
   .cert-kicker{font-size:11.5px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin:2px 0 26px;}
-  .cert-heading{font-size:28px;font-weight:800;color:var(--navy);margin:0 0 6px;font-family:Georgia,'Times New Roman',serif;}
+  .cert-heading{font-size:28px;font-weight:800;color:var(--navy);margin:0 0 6px;font-family:var(--font);}
   .cert-sub{font-size:13.5px;color:var(--muted);margin-bottom:26px;}
-  .cert-name{font-size:30px;font-weight:800;color:var(--blue);margin:6px 0;font-family:Georgia,'Times New Roman',serif;border-bottom:2px solid var(--border);display:inline-block;padding-bottom:8px;min-width:320px;}
+  .cert-name{font-size:30px;font-weight:800;color:var(--blue);margin:6px 0;font-family:var(--font);border-bottom:2px solid var(--border);display:inline-block;padding-bottom:8px;min-width:320px;}
   .cert-desc{font-size:14px;color:var(--ink);line-height:1.8;max-width:560px;margin:18px auto 26px;}
   .cert-details{display:flex;justify-content:center;gap:36px;flex-wrap:wrap;margin:24px 0;padding-top:22px;border-top:1px dashed var(--border);}
   .cert-detail{text-align:center;}
