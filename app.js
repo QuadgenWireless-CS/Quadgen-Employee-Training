@@ -920,6 +920,65 @@ if(speechSupported()){
   window.speechSynthesis.onvoiceschanged = function(){ window.speechSynthesis.getVoices(); };
 }
 
+var narrationAudioEl = null; // the shared <audio> element used for pre-recorded narration, when available
+var currentNarrationAudioUrl = ''; // set when the current slide has a recorded-audio narration instead of browser TTS
+
+/* Returns the recorded-audio URL for a topic's current sub-slide, if the admin/content
+   has provided one — otherwise returns '' and the caller falls back to browser TTS. */
+function getNarrationAudioUrlForSlide(topic, subSlideIndex){
+  if(!topic) return '';
+  if(subSlideIndex === 0) return topic.audioOverview || '';
+  if(subSlideIndex === 1) return topic.audioExample || '';
+  return topic.audioKeyPoints || '';
+}
+
+/* Single entry point used by renderTopic(): plays recorded audio if one is set for this
+   slide (guaranteeing the exact same voice on every device), otherwise falls back to the
+   browser's built-in text-to-speech exactly as before. */
+function playNarration(text, audioUrl){
+  currentNarrationText = text;
+  currentNarrationAudioUrl = audioUrl || '';
+  isNarrationPaused = false;
+
+  if(currentNarrationAudioUrl){
+    playRecordedNarration(currentNarrationAudioUrl);
+  } else {
+    narrateCurrentSlide(text);
+  }
+}
+
+function playRecordedNarration(url){
+  var statusEl = document.getElementById('narration-status');
+  var nextBtn = document.getElementById('slide-next-btn');
+  var pauseBtn = document.getElementById('pause-narration-btn');
+
+  if(narrationAudioEl){
+    narrationAudioEl.pause();
+    narrationAudioEl.src = '';
+  }
+  narrationAudioEl = new Audio(url);
+
+  if(nextBtn && ENFORCE_NARRATION_GATING) nextBtn.disabled = true;
+  if(pauseBtn){ pauseBtn.disabled = false; pauseBtn.textContent = '⏸ Pause'; }
+  if(statusEl) statusEl.textContent = '🔊 Playing narration…';
+
+  narrationAudioEl.addEventListener('ended', function(){
+    if(nextBtn) nextBtn.disabled = false;
+    if(pauseBtn) pauseBtn.disabled = true;
+    if(statusEl) statusEl.textContent = '✓ Narration complete — you can continue.';
+  });
+  narrationAudioEl.addEventListener('error', function(){
+    if(nextBtn) nextBtn.disabled = false;
+    if(pauseBtn) pauseBtn.disabled = true;
+    if(statusEl) statusEl.textContent = '⚠️ Narration audio could not play — you may continue.';
+  });
+  narrationAudioEl.play().catch(function(){
+    // Some browsers block audio until a real user interaction has happened on the page yet.
+    if(nextBtn) nextBtn.disabled = false;
+    if(statusEl) statusEl.textContent = '🔊 Tap Replay to start narration.';
+  });
+}
+
 function narrateCurrentSlide(text){
   currentNarrationText = text;
   isNarrationPaused = false;
@@ -962,9 +1021,25 @@ function narrateCurrentSlide(text){
 }
 
 function togglePauseNarration(){
-  if(!speechSupported()) return;
   var pauseBtn = document.getElementById('pause-narration-btn');
   var statusEl = document.getElementById('narration-status');
+
+  if(currentNarrationAudioUrl && narrationAudioEl){
+    if(isNarrationPaused){
+      narrationAudioEl.play();
+      isNarrationPaused = false;
+      if(pauseBtn) pauseBtn.textContent = '⏸ Pause';
+      if(statusEl) statusEl.textContent = '🔊 Playing narration…';
+    } else {
+      narrationAudioEl.pause();
+      isNarrationPaused = true;
+      if(pauseBtn) pauseBtn.textContent = '▶ Resume';
+      if(statusEl) statusEl.textContent = '⏸ Paused.';
+    }
+    return;
+  }
+
+  if(!speechSupported()) return;
   if(isNarrationPaused){
     window.speechSynthesis.resume();
     isNarrationPaused = false;
@@ -979,10 +1054,16 @@ function togglePauseNarration(){
 }
 
 function replayNarration(){
+  if(currentNarrationAudioUrl){
+    playRecordedNarration(currentNarrationAudioUrl);
+    return;
+  }
   if(currentNarrationText) narrateCurrentSlide(currentNarrationText);
 }
 
 function stopNarration(){
+  if(narrationAudioEl) narrationAudioEl.pause();
+  currentNarrationAudioUrl = '';
   if(speechSupported()) window.speechSynthesis.cancel();
 }
 
@@ -1145,7 +1226,7 @@ function renderTopic(){
         if(nextBtn) nextBtn.disabled = false;
       });
     } else {
-      narrateCurrentSlide(narrationText);
+      playNarration(narrationText, getNarrationAudioUrlForSlide(t, currentSubSlideIndex));
     }
   }
 }
@@ -2027,6 +2108,13 @@ function showTopicForm(moduleId, topicId){
         '<input id="tf-videourl-upload" type="text" value="'+escapeAttr(uploadVal)+'" placeholder="videos/my-clip.mp4">'+
         '<p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5;">Choosing a file here previews it in your browser and checks its length — it does not upload it anywhere by itself. You still need to add this exact file to the <code>videos/</code> folder in your GitHub repo (same as your other videos); the path above is filled in automatically to match.</p>'+
       '</div>'+
+      '<label>Narration audio — Overview slide (optional — path/URL to a pre-recorded audio file; guarantees the exact same voice on every device, unlike browser narration)</label>'+
+      '<input id="tf-audio-overview" type="text" value="'+escapeAttr(t.audioOverview || '')+'" placeholder="audio/topic-overview.mp3">'+
+      '<label>Narration audio — Example slide (optional — only used on slides with no video)</label>'+
+      '<input id="tf-audio-example" type="text" value="'+escapeAttr(t.audioExample || '')+'" placeholder="audio/topic-example.mp3">'+
+      '<label>Narration audio — Key Points slide (optional)</label>'+
+      '<input id="tf-audio-keypoints" type="text" value="'+escapeAttr(t.audioKeyPoints || '')+'" placeholder="audio/topic-keypoints.mp3">'+
+      '<p style="font-size:12px;color:var(--muted);margin:-4px 0 4px;">Leave any of these blank to fall back to the browser\'s built-in narration for that slide (voice will vary by device). Note: these three fields need matching columns in your Apps Script/Sheet backend to actually save — ask if you\'d like help adding those.</p>'+
       '<label>Pictorial example (optional — paste SVG code; only used if no video is set above)</label>'+
       '<textarea id="tf-illustration" rows="3" placeholder="<svg viewBox=\'0 0 700 300\' ...>...</svg>">'+escapeHtml(t.illustration || '')+'</textarea>'+
       '<label>Real-world example</label>'+
@@ -2055,6 +2143,9 @@ function saveTopicForm(moduleId, topicId){
     ? document.getElementById('tf-videourl-upload').value.trim()
     : document.getElementById('tf-videourl').value.trim();
   var illustration = document.getElementById('tf-illustration').value.trim();
+  var audioOverview = document.getElementById('tf-audio-overview').value.trim();
+  var audioExample = document.getElementById('tf-audio-example').value.trim();
+  var audioKeyPoints = document.getElementById('tf-audio-keypoints').value.trim();
   var keyPoints = document.getElementById('tf-keypoints').value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
   var example = document.getElementById('tf-example').value.trim();
   var tip = document.getElementById('tf-tip').value.trim();
@@ -2071,8 +2162,8 @@ function saveTopicForm(moduleId, topicId){
   errEl.textContent = '';
 
   var payload = topicId
-    ? { action:'update_topic', id:topicId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip, illustration:illustration, videoUrl:videoUrl }
-    : { action:'create_topic', moduleId:moduleId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip, illustration:illustration, videoUrl:videoUrl };
+    ? { action:'update_topic', id:topicId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip, illustration:illustration, videoUrl:videoUrl, audioOverview:audioOverview, audioExample:audioExample, audioKeyPoints:audioKeyPoints }
+    : { action:'create_topic', moduleId:moduleId, order:order, icon:icon, title:title, body:body, keyPoints:keyPoints, example:example, tip:tip, illustration:illustration, videoUrl:videoUrl, audioOverview:audioOverview, audioExample:audioExample, audioKeyPoints:audioKeyPoints };
 
   postToBackend(payload).then(function(){ setTimeout(function(){ openModuleContentEditor(moduleId); }, 800); });
 }
