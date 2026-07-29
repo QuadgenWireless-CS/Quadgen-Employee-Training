@@ -347,7 +347,8 @@ var seedCyberTopics = [
       "Verify by contacting the organization directly through its official app or number, not the one in the text."
     ],
     example:"A text reads: 'Your package could not be delivered. Update your address here: bit.ly/xyz123'. You weren't expecting a delivery. This is a classic smishing attempt designed to harvest personal or payment details.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Unexpected Text → Suspicious Link → Block & Report',leftEmoji:'📱',leftLabel:'Unknown Sender',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔗',verdictEmoji:'🚩',resultText:'Blocked & Reported ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Unexpected Text → Suspicious Link → Block & Report',leftEmoji:'📱',leftLabel:'Unknown Sender',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔗',verdictEmoji:'🚩',resultText:'Blocked & Reported ✓'}),
+    videoUrl:"videos/cyber/Smishing.mp4"
   },
   {
     icon:"📞",
@@ -361,7 +362,8 @@ var seedCyberTopics = [
       "Be cautious of unexpected calls claiming to be a senior leader requesting an urgent fund transfer — verify through a second channel."
     ],
     example:"You get a call from someone claiming to be from 'QuadGen IT', saying your account was compromised and asking you to read out the OTP just sent to your phone 'to verify your identity'. This is vishing — hang up and report it.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Urgent Call → Request for OTP → Hang Up & Verify',leftEmoji:'📞',leftLabel:'Spoofed Caller',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔢',verdictEmoji:'🚩',resultText:'Call Ended & Verified ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Urgent Call → Request for OTP → Hang Up & Verify',leftEmoji:'📞',leftLabel:'Spoofed Caller',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔢',verdictEmoji:'🚩',resultText:'Call Ended & Verified ✓'}),
+    videoUrl:"videos/cyber/Vishing%20(1).mp4"
   },
   {
     icon:"🔳",
@@ -375,7 +377,8 @@ var seedCyberTopics = [
       "When in doubt, navigate to the organization's site manually instead of scanning."
     ],
     example:"An email claiming to be from HR asks you to 'scan this QR code to complete your annual benefits enrollment.' Scanning it redirects to a fake login page designed to steal your company credentials.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Scan QR Code → Preview the Link → Confirm Before Proceeding',leftEmoji:'🔳',leftLabel:'QR Poster',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔗',verdictEmoji:'🚩',resultText:'Checked Before Proceeding ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Scan QR Code → Preview the Link → Confirm Before Proceeding',leftEmoji:'🔳',leftLabel:'QR Poster',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔗',verdictEmoji:'🚩',resultText:'Checked Before Proceeding ✓'}),
+    videoUrl:"videos/cyber/Quishing.mp4"
   },
   {
     icon:"💼",
@@ -389,7 +392,8 @@ var seedCyberTopics = [
       "Establish and follow a dual-approval process for any wire transfer or payment detail change."
     ],
     example:"Finance receives an email appearing to be from the CFO: 'I'm in a meeting, please wire $48,000 to this new vendor account today, keep this confidential.' This is a textbook BEC attempt — verify by calling the CFO directly before acting.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Urgent Wire Request → Suspicious Pressure → Verify Independently',leftEmoji:'👔',leftLabel:'\u201cCFO\u201d Email',rightEmoji:'🧑\u200d💼',rightLabel:'Finance Team',centerEmoji:'💸',verdictEmoji:'🚩',resultText:'Verified by Phone Call ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Urgent Wire Request → Suspicious Pressure → Verify Independently',leftEmoji:'👔',leftLabel:'\u201cCFO\u201d Email',rightEmoji:'🧑\u200d💼',rightLabel:'Finance Team',centerEmoji:'💸',verdictEmoji:'🚩',resultText:'Verified by Phone Call ✓'}),
+    videoUrl:"videos/cyber/BEC.mp4"
   },
   {
     icon:"🎭",
@@ -403,7 +407,8 @@ var seedCyberTopics = [
       "Pretexting: building a false but plausible backstory to earn your trust over time."
     ],
     example:"Someone in a delivery uniform, carrying boxes, asks an employee to 'hold the door' into a secure office area. Even though it seems polite to help, this is a common tailgating technique — every visitor should badge in independently.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Friendly Request → Tailgating Attempt → Badge In Yourself',leftEmoji:'📦',leftLabel:'Delivery Person',rightEmoji:'🧑\u200d💼',rightLabel:'Employee',centerEmoji:'🚪',verdictEmoji:'🚫',resultText:'Badged In Independently ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Friendly Request → Tailgating Attempt → Badge In Yourself',leftEmoji:'📦',leftLabel:'Delivery Person',rightEmoji:'🧑\u200d💼',rightLabel:'Employee',centerEmoji:'🚪',verdictEmoji:'🚫',resultText:'Badged In Independently ✓'}),
+    videoUrl:"videos/cyber/Social%20engineering.mp4"
   },
   {
     icon:"🔑",
@@ -417,7 +422,8 @@ var seedCyberTopics = [
       "Never share your password with anyone, including IT — legitimate support never needs it."
     ],
     example:"An employee uses the same password for their personal email and their work account. If that personal account is ever breached, attackers can immediately try the same password against company systems — this is called credential stuffing.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Reused Password → Breach Risk → Switch to Passkey',leftEmoji:'🔑',leftLabel:'Old Password',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔓',verdictEmoji:'🚩',resultText:'Passkey Enabled ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Reused Password → Breach Risk → Switch to Passkey',leftEmoji:'🔑',leftLabel:'Old Password',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔓',verdictEmoji:'🚩',resultText:'Passkey Enabled ✓'}),
+    videoUrl:"videos/cyber/Secure%20passphrase.mp4"
   },
   {
     icon:"🔔",
@@ -431,7 +437,8 @@ var seedCyberTopics = [
       "Report repeated unexpected MFA prompts to IT Security even if you denied every one of them."
     ],
     example:"At 11pm, an employee's phone buzzes ten times in a row with 'Approve sign-in?' prompts they never requested. Tapping 'Approve' out of frustration would hand an attacker full access — the correct action is to deny all and report it immediately.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Repeated Prompts → Deny the Request → Report to IT Security',leftEmoji:'📲',leftLabel:'Attacker',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔔',verdictEmoji:'🚫',resultText:'Denied & Reported ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Repeated Prompts → Deny the Request → Report to IT Security',leftEmoji:'📲',leftLabel:'Attacker',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔔',verdictEmoji:'🚫',resultText:'Denied & Reported ✓'}),
+    videoUrl:"videos/cyber/MFA.mp4"
   },
   {
     icon:"🗂️",
