@@ -348,7 +348,7 @@ var seedCyberTopics = [
     ],
     example:"A text reads: 'Your package could not be delivered. Update your address here: bit.ly/xyz123'. You weren't expecting a delivery. This is a classic smishing attempt designed to harvest personal or payment details.",
     illustration: buildStoryIllustration({caption:'Watch the sequence: Unexpected Text → Suspicious Link → Block & Report',leftEmoji:'📱',leftLabel:'Unknown Sender',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔗',verdictEmoji:'🚩',resultText:'Blocked & Reported ✓'}),
-    videoUrl:"videos/cyber/Smishing.mp4"
+    videoUrl:"videos/cyber/Smishing1.mp4"
   },
   {
     icon:"📞",
@@ -452,7 +452,8 @@ var seedCyberTopics = [
       "Dispose of physical documents containing sensitive data via secure shredding, not the regular trash."
     ],
     example:"An employee copies a customer database to a personal USB drive to 'work on it over the weekend.' Even with good intentions, this violates data handling policy and creates a serious, unencrypted point of exposure if the drive is lost.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Unknown USB → Risk Recognized → Hand to IT Security',leftEmoji:'💾',leftLabel:'USB Drive',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔌',verdictEmoji:'🚩',resultText:'Handed to IT Securely ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Unknown USB → Risk Recognized → Hand to IT Security',leftEmoji:'💾',leftLabel:'USB Drive',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔌',verdictEmoji:'🚩',resultText:'Handed to IT Securely ✓'}),
+    videoUrl:"videos/cyber/Data%20Handling.mp4"
   },
   {
     icon:"🧯",
@@ -466,7 +467,8 @@ var seedCyberTopics = [
       "Follow the 3-2-1 backup principle: three copies of data, on two different media, with one copy stored offline or offsite."
     ],
     example:"An employee opens an unexpected invoice attachment and enables 'editing' as prompted. Within minutes, shared drive files begin showing a .locked extension and a ransom note appears — this is active ransomware, and IT Security must be alerted immediately, without shutting the machine off first if instructed otherwise by IT.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Suspicious Attachment → Files Encrypted → Isolate & Restore',leftEmoji:'📎',leftLabel:'Attachment',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🦠',verdictEmoji:'🚩',resultText:'Isolated & Restored ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Suspicious Attachment → Files Encrypted → Isolate & Restore',leftEmoji:'📎',leftLabel:'Attachment',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🦠',verdictEmoji:'🚩',resultText:'Isolated & Restored ✓'}),
+    videoUrl:"videos/cyber/Ransomware.mp4"
   }
 ];
 
@@ -877,7 +879,7 @@ var currentSubSlideIndex = 0; // 0 = overview, 1 = pictorial example, 2 = key po
 
 /* TEMPORARY (testing only): set to true once the project is fully ready to re-enable
    the "must wait for narration/video to finish before Next unlocks" restriction. */
-var ENFORCE_NARRATION_GATING = false;
+var ENFORCE_NARRATION_GATING = true;
 var currentNarrationText = '';
 var isNarrationPaused = false;
 
