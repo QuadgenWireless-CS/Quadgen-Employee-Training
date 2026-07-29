@@ -205,7 +205,8 @@ var seedComplianceTopics = [
       "Retaliation against a complainant or witness is a separate, serious violation."
     ],
     example:"A manager repeatedly comments on a team member's appearance despite being asked to stop. This is harassment regardless of the manager's seniority, and the employee has the right to file a confidential complaint with the IC without fear of career consequences.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Unwelcome Comment → Stop It → Report to IC',leftEmoji:'😟',leftLabel:'Colleague',rightEmoji:'🧑\u200d💼',rightLabel:'Manager',centerEmoji:'💬',verdictEmoji:'🚫',resultText:'Reported to Internal Committee ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Unwelcome Comment → Stop It → Report to IC',leftEmoji:'😟',leftLabel:'Colleague',rightEmoji:'🧑\u200d💼',rightLabel:'Manager',centerEmoji:'💬',verdictEmoji:'🚫',resultText:'Reported to Internal Committee ✓'}),
+    videoUrl:"videos/posh-awareness-training.mp4"
   },
   {
     icon:"🤝",
