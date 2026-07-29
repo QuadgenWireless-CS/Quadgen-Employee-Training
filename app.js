@@ -1064,11 +1064,13 @@ function renderTopic(){
           "I've watched this video"+
         '</label>'+
       '</div>'
-    : '<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin:14px 0;flex-wrap:wrap;">'+
-        '<span id="narration-status" style="font-size:13px;color:var(--muted);">'+(isDirectVideo ? '🎬 Tap the video to play' : '🔊 Playing narration…')+'</span>'+
-        '<button class="btn-mini" id="pause-narration-btn" onclick="togglePauseNarration()" '+(isDirectVideo?'disabled':'')+'>⏸ Pause</button>'+
-        '<button class="btn-mini" id="replay-narration-btn" onclick="replayNarration()" '+(isDirectVideo?'disabled':'')+'>↻ Replay narration</button>'+
-      '</div>';
+    : (isDirectVideo
+        ? ''
+        : '<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin:14px 0;flex-wrap:wrap;">'+
+            '<span id="narration-status" style="font-size:13px;color:var(--muted);">🔊 Playing narration…</span>'+
+            '<button class="btn-mini" id="pause-narration-btn" onclick="togglePauseNarration()">⏸ Pause</button>'+
+            '<button class="btn-mini" id="replay-narration-btn" onclick="replayNarration()">↻ Replay narration</button>'+
+          '</div>');
 
   wrap.innerHTML =
     '<div class="module-heading"><h1>'+getModuleTitle()+'</h1></div>'+
@@ -1093,20 +1095,7 @@ function renderTopic(){
   } else {
     var directVideoEl = document.getElementById('topic-direct-video');
     if(directVideoEl){
-      // Playback starts only when the viewer clicks the overlay — this guarantees the browser allows audio
-      // (browsers block audio on auto-triggered playback, but always allow it on a direct click).
-      directVideoEl.addEventListener('play', function(){
-        var statusEl = document.getElementById('narration-status');
-        if(statusEl) statusEl.textContent = '🎬 Playing video…';
-      });
-      directVideoEl.addEventListener('ended', function onEnded(){
-        directVideoEl.removeEventListener('ended', onEnded);
-        var pauseBtn = document.getElementById('pause-narration-btn');
-        var replayBtn = document.getElementById('replay-narration-btn');
-        if(pauseBtn) pauseBtn.disabled = false;
-        if(replayBtn) replayBtn.disabled = false;
-        narrateCurrentSlide(narrationText);
-      });
+      // Direct video slides play with their own audio only — no narration follows, and no controls are shown below.
     } else {
       narrateCurrentSlide(narrationText);
     }
