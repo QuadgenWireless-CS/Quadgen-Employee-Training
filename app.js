@@ -333,7 +333,7 @@ var seedCyberTopics = [
     ],
     example:"You receive an email that looks like it's from 'IT Support' asking you to 'verify your password' via a link because of a 'security update'. The sender's real address is it-support@quadgen-secure-check.net — a lookalike domain, not the real company domain. This is phishing.",
     illustration: buildStoryIllustration({caption:'Watch the sequence: Suspicious Email → Spot Red Flags → Verify & Report',leftEmoji:'📧',leftLabel:'Fake Sender',rightEmoji:'🧑\u200d💻',rightLabel:'Employee',centerEmoji:'🔗',verdictEmoji:'🚩',resultText:'Verified & Reported ✓'}),
-    videoUrl:"videos/cyber/Phising%201.mp4"
+    videoUrl:"videos/cyber/Phising1.mp4"
   },
   {
     icon:"📱",
