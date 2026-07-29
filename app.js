@@ -1080,7 +1080,7 @@ function renderTopic(){
       '<button class="btn btn-ghost" onclick="goPrevSlide()" '+(isVeryFirstSlide?'disabled':'')+'>&larr; Previous</button>'+
       '<button class="btn btn-primary" id="slide-next-btn" disabled onclick="'+nextAction+'">'+nextLabel+'</button>'+
     '</div>'+
-    '<div style="text-align:center;margin-top:18px;"><button class="btn-ghost btn" style="border:none;" onclick="stopNarration();showScreen(\'home\')">&larr; Back to home</button></div>';
+    '<div style="text-align:center;margin-top:18px;"><button class="btn-ghost btn back-link" style="border:none;" onclick="stopNarration();showScreen(\'home\')">&larr; Back to home</button></div>';
 
   if(isVideoSlide){
     // No TTS on video slides — the video has its own audio. Next unlocks only once the viewer confirms they watched it.
@@ -1181,7 +1181,7 @@ function renderQuiz(){
     qHtml+
     '<div class="quiz-warn" id="quiz-warn"></div>'+
     '<div class="quiz-submit-bar"><button class="btn btn-primary" onclick="submitQuiz()">Submit assessment</button></div>'+
-    '<div style="text-align:center;"><button class="btn-ghost btn" style="border:none;" onclick="renderTopic()">&larr; Back to topics</button></div>';
+    '<div style="text-align:center;"><button class="btn-ghost btn back-link" style="border:none;" onclick="renderTopic()">&larr; Back to topics</button></div>';
 }
 
 function setAnswer(qIdx, optIdx){
@@ -1281,7 +1281,7 @@ function renderResult(score, total, pass, isFreshPass){
             '<button class="btn btn-ghost" onclick="currentTopicIndex=0;renderTopic();">Review topics again</button>'+
           '</div>'+
         '</div>'+
-        '<div style="margin-top:24px;"><button class="btn-ghost btn" style="border:none;" onclick="showScreen(\'home\')">&larr; Back to home</button></div>'+
+        '<div style="margin-top:24px;"><button class="btn-ghost btn back-link" style="border:none;" onclick="showScreen(\'home\')">&larr; Back to home</button></div>'+
       '</div>';
     return;
   }
