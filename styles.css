@@ -44,7 +44,9 @@
   /* ---------- LOGIN ---------- */
   #screen-login{
     min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:radial-gradient(circle at 50% -10%, #163a63 0%, var(--navy-deep) 55%, #050d1a 100%);
+    background:
+      linear-gradient(rgba(5,15,30,.32), rgba(5,15,30,.4)),
+      url('images/tech-scope-banner.jpg') center/cover no-repeat fixed;
     padding:40px 20px;position:relative;overflow:hidden;
   }
   .login-card{
@@ -108,13 +110,15 @@
   }
   #screen-welcome{
     min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:radial-gradient(circle at 50% -10%, #163a63 0%, var(--navy-deep) 55%, #050d1a 100%);
+    background:
+      linear-gradient(rgba(5,15,30,.32), rgba(5,15,30,.4)),
+      url('images/tech-scope-banner.jpg') center/cover no-repeat fixed;
     padding:40px 20px;position:relative;overflow:hidden;
   }
   /* Signature motif: a live wireless network mesh — connected nodes with data pulses
      traveling between them, literal to a wireless company's own technology. Shared by
      the welcome screen and the login screen via .mesh-host containers. */
-  .mesh-host{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+  .mesh-host{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:none;}
   .mesh-host .mesh-pulse{
     fill:#fff;opacity:.9;filter:drop-shadow(0 0 4px var(--blue-mid));
     transform-box:fill-box;transform-origin:center;animation:qgSparkle 1s ease-in-out infinite;
