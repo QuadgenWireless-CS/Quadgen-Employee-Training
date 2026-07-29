@@ -220,7 +220,8 @@ var seedComplianceTopics = [
       "Bias — even unconscious — should be actively checked in interviews and reviews."
     ],
     example:"Two candidates apply for the same role with equal qualifications. Rejecting one because of assumptions about their age or family status, rather than documented job-related criteria, is unlawful discrimination.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Equal Candidates → Reject Bias → Decide on Merit',leftEmoji:'🧑',leftLabel:'Candidate A',rightEmoji:'🧑\u200d🦱',rightLabel:'Candidate B',centerEmoji:'📋',verdictEmoji:'🚫',resultText:'Merit-Based Decision ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Equal Candidates → Reject Bias → Decide on Merit',leftEmoji:'🧑',leftLabel:'Candidate A',rightEmoji:'🧑\u200d🦱',rightLabel:'Candidate B',centerEmoji:'📋',verdictEmoji:'🚫',resultText:'Merit-Based Decision ✓'}),
+    videoUrl:"videos/Anti-Discrimination%20&%20Equal%20Opportunity.mp4"
   },
   {
     icon:"🌍",
@@ -248,7 +249,8 @@ var seedComplianceTopics = [
       "Alcohol at work events never excuses unprofessional or unsafe behavior."
     ],
     example:"During a heated project review, a senior employee raises their voice and mocks a junior colleague's mistake in front of the whole team. Even if the technical criticism is valid, the delivery is a professional conduct violation and should be reported.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Heated Words → Stop & Reset → Respectful Discussion',leftEmoji:'😠',leftLabel:'Senior Employee',rightEmoji:'😟',rightLabel:'Junior Colleague',centerEmoji:'🗯️',verdictEmoji:'🛑',resultText:'Professional Conduct Restored ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Heated Words → Stop & Reset → Respectful Discussion',leftEmoji:'😠',leftLabel:'Senior Employee',rightEmoji:'😟',rightLabel:'Junior Colleague',centerEmoji:'🗯️',verdictEmoji:'🛑',resultText:'Professional Conduct Restored ✓'}),
+    videoUrl:"videos/Ethics_in_Workplace.mp4"
   },
   {
     icon:"📣",
@@ -262,7 +264,8 @@ var seedComplianceTopics = [
       "All reports are handled confidentially and investigated by an independent team."
     ],
     example:"An employee notices a colleague repeatedly falsifying expense reports and reports it anonymously through the Ethics Hotline. The company is obligated to investigate and to protect the reporting employee's identity throughout the process.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Spot Fraud → Report Anonymously → Protected by Policy',leftEmoji:'🧑\u200d💼',leftLabel:'Employee',rightEmoji:'🕵️',rightLabel:'Ethics Team',centerEmoji:'🧾',verdictEmoji:'🚩',resultText:'Protected & Investigated ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Spot Fraud → Report Anonymously → Protected by Policy',leftEmoji:'🧑\u200d💼',leftLabel:'Employee',rightEmoji:'🕵️',rightLabel:'Ethics Team',centerEmoji:'🧾',verdictEmoji:'🚩',resultText:'Protected & Investigated ✓'}),
+    videoUrl:"videos/Whistleblowing%20in%20the%20Workplace.mp4"
   },
   {
     icon:"🔒",
@@ -1016,8 +1019,7 @@ function renderTopic(){
       bodyHtml =
         '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Video</h2>'+
         '<div class="video-embed-wrap"><iframe src="'+embedUrl+'" title="'+t.title+' training video" '+
-          'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>'+
-        '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
+          'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
     } else if(isDirectVideoFile(t.videoUrl)){
       // Uploaded/hosted video clip: plays with its own audio first; narration begins only once it finishes
       isDirectVideo = true;
@@ -1030,8 +1032,7 @@ function renderTopic(){
             '<div>Tap to play with sound</div>'+
           '</div>'+
           '<button class="video-fullscreen-btn" onclick="fullscreenDirectVideo()">⛶ Fullscreen</button>'+
-        '</div>'+
-        '<div class="example-box"><div class="ex-title">Real-world example</div><p>'+t.example+'</p></div>';
+        '</div>';
     } else if(t.illustration){
       bodyHtml =
         '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Pictorial Example</h2>'+
