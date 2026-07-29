@@ -869,7 +869,7 @@ var currentSubSlideIndex = 0; // 0 = overview, 1 = pictorial example, 2 = key po
 
 /* TEMPORARY (testing only): set to true once the project is fully ready to re-enable
    the "must wait for narration/video to finish before Next unlocks" restriction. */
-var ENFORCE_NARRATION_GATING = false;
+var ENFORCE_NARRATION_GATING = true;
 var currentNarrationText = '';
 var isNarrationPaused = false;
 
@@ -1020,14 +1020,14 @@ function renderTopic(){
     if(embedUrl){
       isVideoSlide = true;
       bodyHtml =
-        '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Video</h2>'+
+        '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+'</h2>'+
         '<div class="video-embed-wrap"><iframe src="'+embedUrl+'" title="'+t.title+' training video" '+
           'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
     } else if(isDirectVideoFile(t.videoUrl)){
       // Uploaded/hosted video clip: plays with its own audio first; narration begins only once it finishes
       isDirectVideo = true;
       bodyHtml =
-        '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+' — Video</h2>'+
+        '<h2><span class="topic-icon">'+t.icon+'</span>'+t.title+'</h2>'+
         '<div class="video-embed-wrap">'+
           '<video id="topic-direct-video" src="'+t.videoUrl+'" playsinline controls></video>'+
           '<div class="video-play-overlay" id="video-play-overlay" onclick="playDirectVideoWithSound()">'+
@@ -1101,6 +1101,24 @@ function renderTopic(){
     if(directVideoEl){
       // Direct video slides play with their own audio only — no narration follows, and no controls are shown below.
       stopNarration();
+
+      // Prevent skipping ahead: remember the furthest point actually reached by real playback,
+      // and snap back if the viewer drags the scrubber forward past that point.
+      var lastValidTime = 0;
+      directVideoEl.addEventListener('timeupdate', function(){
+        if(!directVideoEl.seeking) lastValidTime = directVideoEl.currentTime;
+      });
+      directVideoEl.addEventListener('seeking', function(){
+        if(directVideoEl.currentTime - lastValidTime > 0.5){
+          directVideoEl.currentTime = lastValidTime;
+        }
+      });
+
+      // Next stays locked until the video has genuinely finished playing.
+      directVideoEl.addEventListener('ended', function(){
+        var nextBtn = document.getElementById('slide-next-btn');
+        if(nextBtn) nextBtn.disabled = false;
+      });
     } else {
       narrateCurrentSlide(narrationText);
     }
