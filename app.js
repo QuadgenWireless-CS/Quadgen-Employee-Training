@@ -206,7 +206,7 @@ var seedComplianceTopics = [
     ],
     example:"A manager repeatedly comments on a team member's appearance despite being asked to stop. This is harassment regardless of the manager's seniority, and the employee has the right to file a confidential complaint with the IC without fear of career consequences.",
     illustration: buildStoryIllustration({caption:'Watch the sequence: Unwelcome Comment → Stop It → Report to IC',leftEmoji:'😟',leftLabel:'Colleague',rightEmoji:'🧑\u200d💼',rightLabel:'Manager',centerEmoji:'💬',verdictEmoji:'🚫',resultText:'Reported to Internal Committee ✓'}),
-    videoUrl:"videos/posh-training.mp4"
+    videoUrl:"videos/Posh.mp4"
   },
   {
     icon:"🤝",
@@ -235,7 +235,8 @@ var seedComplianceTopics = [
       "Inclusive language and accessible meeting formats benefit the whole team, not just a few."
     ],
     example:"During a brainstorm, one team member's idea is initially ignored, then praised minutes later when repeated by someone else. A good ally notices this pattern and redirects credit — small daily behaviors like this are what build (or erode) an inclusive culture.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Idea Shared → Credit Redirected → Everyone Heard',leftEmoji:'🙋\u200d♀️',leftLabel:'Team Member',rightEmoji:'🙋',rightLabel:'Colleague',centerEmoji:'💡',verdictEmoji:'🔄',resultText:'Credit Given Correctly ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Idea Shared → Credit Redirected → Everyone Heard',leftEmoji:'🙋\u200d♀️',leftLabel:'Team Member',rightEmoji:'🙋',rightLabel:'Colleague',centerEmoji:'💡',verdictEmoji:'🔄',resultText:'Credit Given Correctly ✓'}),
+    videoUrl:"videos/Diversity.mp4"
   },
   {
     icon:"🧭",
@@ -279,7 +280,8 @@ var seedComplianceTopics = [
       "Report any suspected data leak or lost device immediately, however small it seems."
     ],
     example:"An employee discusses an unreleased product feature with a friend at a coffee shop, unaware a competitor's contact is seated nearby. Even casual disclosure of confidential plans can cause real commercial harm.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Public Conversation → Risk Spotted → Stay Confidential',leftEmoji:'🧑\u200d💼',leftLabel:'Employee',rightEmoji:'🕵️\u200d♂️',rightLabel:'Nearby Listener',centerEmoji:'💬',verdictEmoji:'🚫',resultText:'Confidentiality Maintained ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Public Conversation → Risk Spotted → Stay Confidential',leftEmoji:'🧑\u200d💼',leftLabel:'Employee',rightEmoji:'🕵️\u200d♂️',rightLabel:'Nearby Listener',centerEmoji:'💬',verdictEmoji:'🚫',resultText:'Confidentiality Maintained ✓'}),
+    videoUrl:"videos/DataPrivacy.mp4"
   },
   {
     icon:"🧩",
@@ -293,7 +295,8 @@ var seedComplianceTopics = [
       "When in doubt, disclose — an undisclosed conflict is far more damaging than a disclosed one."
     ],
     example:"A procurement manager's spouse owns a company bidding for a QuadGen vendor contract. The manager must disclose this relationship and step back from the vendor selection process entirely.",
-    illustration: buildStoryIllustration({caption:'Watch the sequence: Family Connection → Disclose It → Recuse & Stay Ethical',leftEmoji:'🧑\u200d🤝\u200d🧑',leftLabel:'Family Member',rightEmoji:'🏢',rightLabel:'Vendor',centerEmoji:'📝',verdictEmoji:'🚩',resultText:'Disclosed & Recused ✓'})
+    illustration: buildStoryIllustration({caption:'Watch the sequence: Family Connection → Disclose It → Recuse & Stay Ethical',leftEmoji:'🧑\u200d🤝\u200d🧑',leftLabel:'Family Member',rightEmoji:'🏢',rightLabel:'Vendor',centerEmoji:'📝',verdictEmoji:'🚩',resultText:'Disclosed & Recused ✓'}),
+    videoUrl:"videos/Conflict%20of%20Interest%20Awareness.mp4"
   }
 ];
 
@@ -1092,10 +1095,12 @@ function renderTopic(){
 
   if(isVideoSlide){
     // No TTS on video slides — the video has its own audio. Next unlocks only once the viewer confirms they watched it.
+    stopNarration();
   } else {
     var directVideoEl = document.getElementById('topic-direct-video');
     if(directVideoEl){
       // Direct video slides play with their own audio only — no narration follows, and no controls are shown below.
+      stopNarration();
     } else {
       narrateCurrentSlide(narrationText);
     }
