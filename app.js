@@ -630,28 +630,124 @@ function signIn(){
 
   err.textContent = "";
   pendingUser = { name:name, empid:empid, email:email };
+  requestOtp();
+}
 
+/* ============================= OTP (email verification, step 2 of login) ============================= */
+var otpResendTimer = null;
+
+function requestOtp(){
+  var signInBtn = document.getElementById('btn-sign-in');
+  var err = document.getElementById('login-error');
+  signInBtn.disabled = true;
+  signInBtn.textContent = "Sending verification code…";
+
+  jsonpRequest(RESULTS_WEBAPP_URL + '?action=send_otp&email=' + encodeURIComponent(pendingUser.email))
+    .then(function(data){
+      signInBtn.disabled = false;
+      signInBtn.textContent = "Sign in";
+      if(data && data.success){
+        showOtpStep();
+      } else {
+        err.textContent = (data && data.error) || "Could not send a verification code. Please try again.";
+      }
+    })
+    .catch(function(){
+      signInBtn.disabled = false;
+      signInBtn.textContent = "Sign in";
+      err.textContent = "Couldn't reach the server to send a verification code. Please try again.";
+    });
+}
+
+function showOtpStep(){
+  document.getElementById('login-step-1').classList.add('hidden');
+  document.getElementById('login-step-2').classList.remove('hidden');
+  document.getElementById('otp-code-input').value = '';
+  document.getElementById('otp-error').textContent = '';
+  document.getElementById('otp-sent-to').textContent = pendingUser.email;
+  document.getElementById('otp-code-input').focus();
+  startOtpResendCountdown();
+}
+
+function backToStep1FromOtp(){
+  if(otpResendTimer) clearInterval(otpResendTimer);
+  document.getElementById('login-step-2').classList.add('hidden');
+  document.getElementById('login-step-1').classList.remove('hidden');
+  document.getElementById('login-error').textContent = '';
+}
+
+function startOtpResendCountdown(){
+  var seconds = 45;
+  var resendBtn = document.getElementById('btn-resend-otp');
+  var countdownEl = document.getElementById('otp-resend-countdown');
+  resendBtn.disabled = true;
+  if(otpResendTimer) clearInterval(otpResendTimer);
+  countdownEl.textContent = seconds + 's';
+  otpResendTimer = setInterval(function(){
+    seconds--;
+    if(seconds <= 0){
+      clearInterval(otpResendTimer);
+      resendBtn.disabled = false;
+      countdownEl.textContent = '';
+    } else {
+      countdownEl.textContent = seconds + 's';
+    }
+  }, 1000);
+}
+
+function resendOtp(){
+  var resendBtn = document.getElementById('btn-resend-otp');
+  if(resendBtn.disabled) return;
+  document.getElementById('otp-error').textContent = '';
+  requestOtp();
+}
+
+function verifyOtpAndProceed(){
+  var code = document.getElementById('otp-code-input').value.trim();
+  var errEl = document.getElementById('otp-error');
+  var verifyBtn = document.getElementById('btn-verify-otp');
+
+  if(!/^[0-9]{6}$/.test(code)){
+    errEl.textContent = "Please enter the 6-digit code sent to your email.";
+    return;
+  }
+  errEl.textContent = "";
+  verifyBtn.disabled = true;
+  verifyBtn.textContent = "Verifying…";
+
+  jsonpRequest(RESULTS_WEBAPP_URL + '?action=verify_otp&email=' + encodeURIComponent(pendingUser.email) + '&code=' + encodeURIComponent(code))
+    .then(function(data){
+      verifyBtn.disabled = false;
+      verifyBtn.textContent = "Verify & continue";
+      if(data && data.success){
+        if(otpResendTimer) clearInterval(otpResendTimer);
+        finishLoginAfterOtp();
+      } else {
+        errEl.textContent = (data && data.error) || "Incorrect code. Please try again.";
+      }
+    })
+    .catch(function(){
+      verifyBtn.disabled = false;
+      verifyBtn.textContent = "Verify & continue";
+      errEl.textContent = "Couldn't reach the server. Please try again.";
+    });
+}
+
+function finishLoginAfterOtp(){
   if(loginMode === 'admin'){
-    var signInBtn = document.getElementById('btn-sign-in');
-    signInBtn.disabled = true;
-    signInBtn.textContent = "Checking access…";
-
-    jsonpRequest(RESULTS_WEBAPP_URL + '?action=is_admin&empid=' + encodeURIComponent(empid) + '&email=' + encodeURIComponent(email))
+    var otpErr = document.getElementById('otp-error');
+    jsonpRequest(RESULTS_WEBAPP_URL + '?action=is_admin&empid=' + encodeURIComponent(pendingUser.empid) + '&email=' + encodeURIComponent(pendingUser.email))
       .then(function(adminData){
-        signInBtn.disabled = false;
-        signInBtn.textContent = "Sign in";
         if(adminData.isAdmin){
           completeLogin();
           showScreen('admin');
           loadAdminDashboard();
         } else {
-          err.textContent = "This account is not authorized as admin. Contact your administrator to be added.";
+          otpErr.textContent = "This account is not authorized as admin. Contact your administrator to be added.";
         }
       })
       .catch(function(){
-        signInBtn.disabled = false;
-        signInBtn.textContent = "Sign in";
-        err.textContent = "Couldn't reach the server. Please try again.";
+        otpErr.textContent = "Couldn't reach the server. Please try again.";
       });
   } else {
     completeLogin();
@@ -675,6 +771,11 @@ function handleLogout(){
   document.getElementById('in-empid-digits').value = "";
   document.getElementById('in-email').value = "";
   document.getElementById('login-error').textContent = "";
+  if(otpResendTimer) clearInterval(otpResendTimer);
+  var step1 = document.getElementById('login-step-1');
+  var step2 = document.getElementById('login-step-2');
+  if(step1) step1.classList.remove('hidden');
+  if(step2) step2.classList.add('hidden');
   resetResultsState();
   pendingUser = null;
 }
