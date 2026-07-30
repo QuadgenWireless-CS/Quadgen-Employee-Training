@@ -1390,21 +1390,54 @@ function goPrevSlide(){
 }
 
 /* ============================= QUIZ ============================= */
+var currentQuizShuffled = []; // the quiz actually shown this attempt, with options reordered per question
+
+/* Fisher-Yates shuffle — returns a new array, doesn't mutate the original */
+function shuffleArray(arr){
+  var a = arr.slice();
+  for(var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+/* Builds a fresh, randomized copy of the quiz for this attempt: each question's
+   options are shuffled independently, and correctIndex is remapped to match the
+   new order — so the correct answer isn't reliably sitting in the same slot
+   (e.g. always "B") across questions or between attempts. */
+function buildShuffledQuiz(){
+  var quiz = getQuiz();
+  return quiz.map(function(item){
+    var correctAns = (item.correctIndex !== undefined) ? item.correctIndex : item.correct;
+    var order = shuffleArray([0,1,2,3]);
+    var newOptions = order.map(function(originalIdx){ return item.options[originalIdx]; });
+    var newCorrectIndex = order.indexOf(correctAns);
+    return {
+      questionText: item.questionText || item.q,
+      options: newOptions,
+      correctIndex: newCorrectIndex,
+      explanation: item.explanation || ''
+    };
+  });
+}
+
 function startQuiz(){
   stopNarration();
   quizAnswers = {};
+  currentQuizShuffled = buildShuffledQuiz();
   renderQuiz();
 }
 
 function renderQuiz(){
-  var quiz = getQuiz();
+  var quiz = currentQuizShuffled;
   var wrap = document.getElementById('module-wrap');
   var qHtml = quiz.map(function(item, idx){
     var optsHtml = item.options.map(function(opt, oi){
       return '<label id="q'+idx+'-opt'+oi+'-label"><input type="radio" name="q'+idx+'" value="'+oi+'" onchange="setAnswer('+idx+','+oi+')"> '+opt+'</label>';
     }).join('');
     return '<div class="quiz-q" id="quiz-q-'+idx+'"><div class="q-num">Question '+(idx+1)+' of '+quiz.length+'</div>'+
-      '<div class="q-text">'+(item.questionText || item.q)+'</div>'+
+      '<div class="q-text">'+item.questionText+'</div>'+
       '<div class="q-options">'+optsHtml+'</div>'+
       '<div class="q-feedback" id="q'+idx+'-feedback"></div>'+
       '</div>';
@@ -1423,9 +1456,9 @@ function setAnswer(qIdx, optIdx){
   if(quizAnswers[qIdx] !== undefined) return; // already locked in, ignore further changes
   quizAnswers[qIdx] = optIdx;
 
-  var quiz = getQuiz();
+  var quiz = currentQuizShuffled;
   var item = quiz[qIdx];
-  var correctAns = (item.correctIndex !== undefined) ? item.correctIndex : item.correct;
+  var correctAns = item.correctIndex;
   var isCorrect = optIdx === correctAns;
 
   // Lock the whole question: disable every radio button for it
@@ -1453,15 +1486,14 @@ function setAnswer(qIdx, optIdx){
 }
 
 function submitQuiz(){
-  var quiz = getQuiz();
+  var quiz = currentQuizShuffled;
   if(Object.keys(quizAnswers).length < quiz.length){
     document.getElementById('quiz-warn').textContent = 'Please answer all '+quiz.length+' questions before submitting.';
     return;
   }
   var score = 0;
   quiz.forEach(function(item, idx){
-    var correctAns = (item.correctIndex !== undefined) ? item.correctIndex : item.correct;
-    if(quizAnswers[idx] === correctAns) score++;
+    if(quizAnswers[idx] === item.correctIndex) score++;
   });
   var pass = score >= getPassMark();
   results[currentModuleId] = { done:true, score:score, total:quiz.length, pass:pass };
@@ -1589,6 +1621,7 @@ function dismissCelebration(){
 
 function retakeQuiz(){
   quizAnswers = {};
+  currentQuizShuffled = buildShuffledQuiz();
   renderQuiz();
 }
 
